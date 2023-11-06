@@ -1,0 +1,29 @@
+<--J-value data from chemistry code: id#, reaction,       factor/fastJX/code(a6)
+   1 O2        PHOTON    O         O                       1.000 /O2    /
+   2 O3        PHOTON    O2        O                       1.000 /O3    /
+   3 O3        PHOTON    O2        O(1D)                   1.000 /O3(1D)/
+   4 HGBR      PHOTON    HG0       BR                      1.000 /MB    /
+   6 HGCL2     PHOTON    HG0       CL                      1.000 /MC2   / 
+   6 HGOH      PHOTON    HG0       OH                      1.000 /MO    /
+   7 HGBRNO2   PHOTON    HGBR      PRODUCTS                1.000 /MBNO2 /
+   8 HGBRHO2   PHOTON    HGBR      PRODUCTS                1.000 /MBHO2 /
+   9 HGBROH    PHOTON    HGBR      PRODUCTS                1.000 /MBOH  /
+  10 HGBR2     PHOTON    HGBR      PRODUCTS                1.000 /MB2   /
+  11 HGBRBRO   PHOTON    HGBR      PRODUCTS                1.000 /MBBRO /
+  12 HGBRCLO   PHOTON    HGBR      PRODUCTS                1.000 /MBCLO /
+  13 HG2ORGP   PHOTON    HG0       PRODUCTS                0.004 /NO2   /
+  14 HGCLNO2   PHOTON    HG0       PRODUCTS                1.000 /MBNO2 /
+  15 HGCLHO2   PHOTON    HG0       PRODUCTS                1.000 /MBHO2 /
+  16 HGCLOH    PHOTON    HG0       PRODUCTS                1.000 /MBOH  /
+  17 HGCLBR    PHOTON    HG0       PRODUCTS                1.000 /MB2   /
+  18 HGCLBRO   PHOTON    HG0       PRODUCTS                1.000 /MBBRO /
+  19 HGCLCLO   PHOTON    HG0       PRODUCTS                1.000 /MBCLO /
+  20 HGOHNO2   PHOTON    HGOH      PRODUCTS                1.000 /MBNO2 /
+  21 HGOHHO2   PHOTON    HGOH      PRODUCTS                1.000 /MBHO2 /
+  22 HGOHOH    PHOTON    HGOH      PRODUCTS                1.000 /MC2   /
+  23 HGOHBRO   PHOTON    HGOH      PRODUCTS                1.000 /MBBRO /
+  24 HGOHCLO   PHOTON    HGOH      PRODUCTS                1.000 /MBCLO /
+  25 NO2       PHOTON    NO        O                       1.000 /NO2   /
+  26 ClO       PHOTON    Cl        O                       1.000 /ClO   /
+  27 BrO       PHOTON    Br        O                       1.000 /BrO   /
+9999

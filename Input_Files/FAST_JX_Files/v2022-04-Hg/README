@@ -1,0 +1,59 @@
+README -- Describes contents of CHEM_INPUTS/FAST_JX/v2022-04-Hg
+28 Mar 2022
+GEOS-Chem Support Team
+geos-chem-support@g.harvard.edu
+
+
+Overview:
+===============================================================================
+
+This directory contains information for input into the FAST-JX photolysis 
+mechanism, for the Hg simulation prepared by Viral Shal (Github: @vshah211).
+
+
+Files: 
+===============================================================================
+
+FJX_j2j.dat:
+
+  -- Contains information to link GEOS-Chem chemical species to Fast-JX species.
+     For more details on the contents of this file see:
+
+       http://wiki.seas.harvard.edu/geos-chem/index.php/FAST-JX_v7.0_photolysis_mechanism#FJX_j2j.dat
+
+
+FJX_spec.dat
+
+  -- Contains FAST-JX cross sections.
+
+
+jv_spec_mie.dat
+
+  -- Contains aerosol optical properties at 5 wavelengths.
+
+
+brc.dat
+dust.dat
+org.dat
+so4.dat
+soot.dat
+ssa.dat
+ssc.dat
+h2so4.dat
+
+  --  Contains aerosol optical properties for:
+
+        brc   : brown carbon
+        dust  : dust
+        org   : organic carbon
+        so4   : sulfate
+        soot  : black carbon
+	ssa   : accumulation-mode sea salt aerosol
+	ssc   : coarse-mode sea salt aerosol
+	h2so4 : sulfuric acid (UCX-based mechanisms only)
+
+      The properties are provided at multiple wavelengths to be used in the
+      online calculation of the aerosol optical depth diagnostics. Up to three
+      wavelentghs can be selected in the Radiation Menu of input.geos. These
+      properties are also used for in the RRTMG radiative transfer model
+      (if enabled).
