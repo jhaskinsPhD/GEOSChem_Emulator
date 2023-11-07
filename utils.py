@@ -309,7 +309,8 @@ def join_list_for_MATLAB(join_str:str, ls0:list,min_len:int =75, add_semicolon:b
             ln= join_str.join(ln_ls) 
             
             # If the length of the new string is greater than your min length, you need a new line! 
-            if len(ln) > min_len: 
+            # or if you're on the very LAST item in the list, then you need to add it to the list of stuff to write. 
+            if (len(ln) > min_len) or (i== len(ls)-1): 
             
                 # Check to see if the user wants to insert anything before this new line: 
                 if insert != '' and ln_num not in insert_skip: ln=insert+ln 
@@ -321,7 +322,7 @@ def join_list_for_MATLAB(join_str:str, ls0:list,min_len:int =75, add_semicolon:b
                
                 ln_num= ln_num+1 # Update the line number to be the NEXT line... 
                 ln_ls=[]; # reset list holding items to put on a single line 
-    
+                
     # Join each line together with the MATLAB line break and new line character 
     to_join= join_str+'...\n' 
     out_str=preface+to_join.join(lines)+ad
@@ -554,7 +555,7 @@ def check_filename(filename:str='', default_name:str= '', ext:str='',
         else:
             # Use a regex string to pull out the last version # of file
             # This regex looks for 1+ # following "_v" ... Pulls out ['39'] from 'my_file_v39.txt'
-            last_ver=re.findall(r'_v([0-9]+)',name_only)
+            last_ver=re.findall(r'j([a-zA-Z0-9]+)',name_only)
             
             # C.2.1 If the file exists but does NOT have a version #, then add one! 
             if len(last_ver) == 0: 

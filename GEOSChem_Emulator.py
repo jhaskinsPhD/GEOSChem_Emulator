@@ -22,9 +22,22 @@ import pyF0AM as fio
 # %%---------------------------------------------------------------------------
 #-------------- (A.4) make_header_for_F0AM_mech() & Sub-Functions -------------
 #------------------------------------------------------------------------------
+def make_header_for_GEOSCem_J(photo_functs): 
+    """Function to make a descriptive header for the GEOSChem_J.m file. 
+    
+       (4) photo_functs  - LIST of unique J-values that must be defined in F0AM 
+                            for the resulting mechanism to work outputted from KPP_Dict_to_F0AM_IO()  
+    
+    """
+    cmt_space1= '%                    '; cmt_space2='%              '
+    j_info =    '%    j_values={' +','.join([f if np.mod(i,15)!=0 or i==0 else cmt_space2+f for i,f in enumerate(photo_functs) ] )+'};' 
+    jzero='Jzero=0.*J3; % Set photolysis=0 for stratospheric only rxns \n' 
+
+
+    return 
 
 # A.5 L1-function called within make_GEOSCHEM_AllRxns_file() 
-def make_header_for_F0AM_mech(kppfile, GC_version, r_functs, photo_functs): 
+def make_header_for_AllRxns(kppfile, GC_version, r_functs, photo_functs, jmap_type): 
     """Function to make a descriptive header for the generated mechanism file. 
     
     INPUTS: 
@@ -34,23 +47,17 @@ def make_header_for_F0AM_mech(kppfile, GC_version, r_functs, photo_functs):
        (2) GC_version    - STR formatted as '13.3.4' corresponding to what GEOS-Chem 
                              version you are seeking to create a F0AM file for. 
                       
-       (3) r_functs      - LIST of all rate functions used in the mechanism. 
+       (3) r_functs      - LIST of all names of pre-defined K-Rates used in the mechanism. 
        
-       (4) photo_functs  - LIST of unique J-values that must be defined in F0AM 
-                            for the resulting mechanism to work outputted from KPP_Dict_to_F0AM_IO()  
-    
+       (4) photo_functs - LIST of all names of pre-defined J-Rates used in the mechanism. 
+       
     OUTPUTS: 
     --------
        (1) mech_title    -
        
        (2) mech_comments -
-       
-       (3) set_globals    -
-       
-       (4) call           -
-       
-       (5) jzero          -
-        
+              
+               
     REQUIREMENTS: 
     -------------
         LIBRARIES:           import numpy as np 
@@ -80,37 +87,16 @@ def make_header_for_F0AM_mech(kppfile, GC_version, r_functs, photo_functs):
     j_info =    '%    j_values={' +','.join([f if np.mod(i,15)!=0 or i==0 else cmt_space2+f for i,f in enumerate(photo_functs) ] )+'};' 
     
     # Make Title Containing details + list of functions this rxn file requires to run.  
-    mech_title=''.join(['% GEOS-Chem Mechanism for '+GC_version +' generated on '+str(date.today())+' from KPP file: ',  
-                        '%    '+kppfile])
+    mech_title=''.join(['% F0AM Compliant GEOS-Chem Mechanism for version'+GC_version +' generated on '+str(date.today())+' from KPP file: ',  
+                        '%    '+kppfile+ ' using jmap_type =' +jmap_type])
                        
-    mech_comments=''.join(['% List of GEOS-Chem functions for reaction rates required in this mechanism:', 
-                        rate_info, '\n', 
-                        '% List of MCM photolysis frequences required in this mechanism:' ,
-                        j_info]) 
+    mech_comments=''.join(['% List of reaction rates that must be defined in "GEOSChem_K.m" for this mech to work:\n',
+                           #rate_info, 
+                           '\n\n',
+                           '% List of photolysis rates that must be defined in "GEOSChem_J.m" for this mech to work:\n'])
+                           #j_info]) 
     
-    # Write a line that sets the global vars in Met and also one that retrieves them in this file! 
-    set_globals='\n'.join(['%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%',
-                           '%%%%%%%%%%%%%%%%%% DEFINE STUFF WE NEED FOR THIS TO WORK %%%%%%%%%%%%%%%%%%',
-                           '%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%',
-                            '',                                              
-                           '% Set Met Vars as global MATLAB variables so rate functions can retrieve them.', 
-                           'setGlobal_MetVars(Met);',
-                           '',
-                           '% Retrieve them so explicitly defined rates in this file can use them' ,
-                           '[TEMP, PRESS, NUMDEN, H2O, TEMP_OVER_K300, K300_OVER_TEMP] = '+\
-                               'getGlobal_MetVars();',  
-                           '',
-                           'struct2var(Met);  % Extract vars in Met as vars so we can use them in rates ... '
-                           '','',''])
-
-    # Write the line that is used to import all the GEOS-Chem Rates Functions to the mechanism. 
-    call='\n'.join(['% Import all functions that are used in rates:' , 
-                    "out = import_GC_rates({'all'});",
-                    '['+utils.join_list_for_MATLAB(',', r_functs)+'] = out{:};','',''])
-    
-    jzero='Jzero=0.*J3; % Set photolysis=0 for stratospheric only rxns \n' 
-    
-    return mech_title, mech_comments, set_globals, call, jzero 
+    return mech_title, mech_comments
 
 # A.4 L1-function called within make_GEOSCHEM_AllRxns_file() 
 def eliminate_dead_ends(het_info, info):
@@ -236,7 +222,7 @@ def _append_to_ndict_list(ddict_in:dict, key1:str, key2:str, values, allow_dupes
     return ddict
 
 # A.3.2 L2-function called within KPP_Dict_to_F0AM_IO within make_GEOSCHEM_AllRxns_file() 
-def get_all_MCM_Js_needed(J_in:str, all_Js:list=[]): 
+def get_all_MCM_Js_needed(J_in:str, fjx_df:pd.DataFrame, all_Js:list=[]): 
     """Function to parse and extract a unique list of MCM J-values referenced in input string, 
     'j_in' and append these to a "master list" of all unique Js referenced in the mechanism. 
     
@@ -247,11 +233,13 @@ def get_all_MCM_Js_needed(J_in:str, all_Js:list=[]):
     
     INPUTS:
     -------
-        J_in - A STRING containing a MCM j-value that (may) be a combo of 
-               scale factors/ multiple Js. 
+        (1) J_in - A STRING containing a MCM j-value that (may) be a combo of 
+                   scale factors/ multiple Js. 
                
-        all_Js - (OPTIONAL) A LIST containing all the unique MCM J-values used in 
-              rate definitions. Values in J_in are APPENDED to this list if they're new!
+        (2) fjx_df - A Pandas Dataframe outputted from create_jmap_dict() with info on all J-rxns 
+       
+        (3) all_Js - (OPTIONAL) A LIST containing all the unique MCM J-values used in 
+                     rate definitions. Values in J_in are APPENDED to this list if they're new!
         
     OUTPUTS: 
     ------- 
@@ -261,9 +249,9 @@ def get_all_MCM_Js_needed(J_in:str, all_Js:list=[]):
                 
     EXAMPLE: 
     --------
-        Parses J_in='0.5.*(J22+J15)', extracts ['J22', 'J15'], and adds them to the output list 'all_Js'
+        Parses jMVK_a='0.5.*(J22+J15)', extracts ['J22', 'J15'], and adds them to the output list 'all_Js'
             OR
-        Parses J_in='J54.*4.6', extracts  ['J54'] , and adds it to the output list 'all_Js'
+        Parses jMVK_b='J54.*4.6', extracts  ['J54'] , and adds it to the output list 'all_Js'
                              
     USAGE: 
     -----  
@@ -289,6 +277,10 @@ def get_all_MCM_Js_needed(J_in:str, all_Js:list=[]):
          10/2/2023    JDH Modified documentation & changed from string split to regex, added error pop! 
                                      
     """
+    # Pull out the MCM assignment for this J-value name from fjx_df that we need to parse.. 
+    fjx_ind=fjx_df.index[fjx_df['PHOTOL(IND)']==J_in]
+    J_value=fjx_df.loc[fjx_ind[0],'F0AM_Assignment']
+    
     # Define the Regex string to find J-value matches. 'Jregex' will hit str matches to the letter "J" 
     # followed by one or more numbers 0-9. Match will end when something other than 0-9 is encountered.
     # Won't match just "J" or return blank items in a list with spaces! 
@@ -298,12 +290,12 @@ def get_all_MCM_Js_needed(J_in:str, all_Js:list=[]):
 
     # Use regex's "Findall()" to return a list of all matches to MCM type J-values in the string "J_in"
     # That follow the format defined in 'J_pattern'
-    indv_Jlist=re.findall(J_pattern1,J_in)+re.findall(J_pattern2,J_in)+re.findall(J_pattern3,J_in)
+    indv_Jlist=re.findall(J_pattern1,J_value)+re.findall(J_pattern2,J_value)+re.findall(J_pattern3,J_value)
 
     # Pop an error if no J-Values were found in "Jlist". 
     if len(indv_Jlist)==0: 
         raise ValueError("The function get_all_MCM_Js_needed() could not find any J-values in "+ 
-                         "this string: '"+J_in+"' \n\n"+ 
+                         "this string: '"+J_value+"' which is the assignment for '"+J_in+"'. \n\n"+ 
                          "This is either your fault (bad input) or means that the regex format string \n"+
                          "used in the function 'get_all_MCM_Js_needed()' needs to be modified to catch this instance!").with_traceback(sys.exc_info()[2])
     else: 
@@ -316,7 +308,7 @@ def get_all_MCM_Js_needed(J_in:str, all_Js:list=[]):
     return all_Js
 
 # A.3.1 L2-function called within KPP_Dict_to_F0AM_IO within make_GEOSCHEM_AllRxns_file() 
-def convert_FJX_PhotoRxns_to_MCM(photo_dict, jmap_dict): 
+def convert_FJX_PhotoRxns_to_MCM(photo_dict, jmap_dict, fjx_df): 
     """Function used to format photolysis reactions and convert the rates for 
     photolysis reactions into lists we can use to build an MCM compliant mechanism. 
     Specifically, this is where the actual mapping of FJX/KPP photolysis rates into 
@@ -329,7 +321,9 @@ def convert_FJX_PhotoRxns_to_MCM(photo_dict, jmap_dict):
                     
        (2) jmap_dict  -         Mapping Dictionary with keys corresponding to FJX phototlysis rates and 
                                 values corresponding to F0AM corresponding rate values.
-    
+                                
+       (3) fjx_df     -         Pandas df outputted from create_jmap_dict() 
+       
     OUTPUTS: 
     --------
         (1) mapped_F0AM_JRates - List of Jrates to use in F0AM, with FJX values converted to 
@@ -397,18 +391,20 @@ def convert_FJX_PhotoRxns_to_MCM(photo_dict, jmap_dict):
         else: #Otherwise, use the mapped value in J-Dict to define rate in MCM!  
                 
             # Define the j-value rate that should be used for this reaction! 
-            mapped_F0AM_JRates.append('k(:,i) = '+jmap_dict[jkey].replace('EXP(','exp(')+';')
+            jind=fjx_df.index[fjx_df['PHOTOL(IND)']==jkey.replace(' ','')]
+            j_info=fjx_df.loc[jind[0],'Info']
+            mapped_F0AM_JRates.append('k(:,i) = '+jmap_dict[jkey].replace('EXP(','exp(')+';'+j_info)
                 
             # Parse the MCM j-value you just added and add the individual 
             # Js used in that rate (since some defs include scale factors like '54.*J3') 
             # to a "MASTER" list of all J-s that must be defined in MCM for resulting mech to work! 
-            unq_MCM_Js_req=get_all_MCM_Js_needed(jmap_dict[jkey],all_Js=unq_MCM_Js_req)
+            unq_MCM_Js_req=get_all_MCM_Js_needed(rate,fjx_df,all_Js=unq_MCM_Js_req)
             
     return mapped_F0AM_JRates, unq_MCM_Js_req
    
 # A.3 L1-function called within make_GEOSCHEM_AllRxns_file() 
 def KPP_Dict_to_F0AM_IO(rxn_dict, is_photo:bool=False, jmap_dict:dict=dict({}),
-                        make_rate_dict:bool=False): 
+                        fjx_df=pd.DataFrame(),make_rate_dict:bool=False): 
     """ Function to take a dictionary outputted from parse_KPP with info about 
     the rxns/rates and convert it into the format the build_mech() function 
     needs to create a F0AM compliant mechanism file.
@@ -422,7 +418,9 @@ def KPP_Dict_to_F0AM_IO(rxn_dict, is_photo:bool=False, jmap_dict:dict=dict({}),
                  
         (3) jmap_dict - (ONLY USED if is_photo=True) DICT with info on how to map j-values! 
                           
-        (4) make_rate_dict - (OPTIONAL) BOOLEAN if you want to make/output the rxn_rate dictionary! 
+        (4) fjx_df    - (ONLY USED if is_photo=True) Pandas Df outputted from create_jmap_dict() 
+    
+        (5) make_rate_dict - (OPTIONAL) BOOLEAN if you want to make/output the rxn_rate dictionary! 
    
     OUTPUTS: 
     --------  
@@ -434,8 +432,8 @@ def KPP_Dict_to_F0AM_IO(rxn_dict, is_photo:bool=False, jmap_dict:dict=dict({}),
        
         NOTE: These 3 output lists should be equal length: rxns, rxn_index, and rates. 
         
-        (4) unq_functs - LIST of unique rate functions or J-values that must be defined in F0AM 
-                             for the resulting mechanism to work! 
+        (4) unq_functs - LIST of unique rate function names that must be defined in F0AM's GEOSChem_J.m' 
+                         or 'GEOSChem_K.m' file for the resulting mechanism to work! 
                              
      REQUIREMENTS: 
      -------------
@@ -503,7 +501,7 @@ def KPP_Dict_to_F0AM_IO(rxn_dict, is_photo:bool=False, jmap_dict:dict=dict({}),
         # Map all FJX photolysis rates to their corresponding values in F0AM & get a 
         # list of all unique J values that must be defined in F0AM for mech to work! 
         # Includes appending 'k(:,i) = ' and appending ";" as is done for non-photolysis reactions! 
-        rates, unq_functs = convert_FJX_PhotoRxns_to_MCM(rxn_dict, jmap_dict)
+        rates, unq_functs = convert_FJX_PhotoRxns_to_MCM(rxn_dict, jmap_dict, fjx_df)
         
         return rxns, rxn_index, rates, unq_functs
 
@@ -978,6 +976,13 @@ def parse_rxns_and_rates(line:str, rinfo:dict, file_location:dict):
     else:
         function='None'; arg_list=list([])
      
+    # Turn rate function calls into strings! 
+    # If the first char is a letter (not a #!) 
+    if rate[0].isalpha() is True and 'PHOTOL' not in rate and 'HET' not in rate: 
+        # Then turn it into a STRING that will be recognized by MATLAB... 
+        rate="'K_"+rate+"'"
+             
+             
     # Now save everything into its appropriate output list  
     rinfo['rxn'].append(rxn)                 # List of strings with full reaction only... 
     rinfo['reactants'].append(rct_i)         # *Nested* list containing all reactants per reaction.  
@@ -1321,6 +1326,56 @@ def parse_kpp_main(kppfile):
 #------------------------------------------------------------------------------
 #-------------- (A.1) create_jmap_dict() & Sub-Functions -----------------------
 #------------------------------------------------------------------------------
+def make_unique_Jname(jname, current_names): 
+    """Function to make a new , unique nickname for a J-value currently named 'jname' 
+    that does NOT appear in the input list 'current_names'
+    
+    INPUTS:
+    ------
+        (1) jname         - STR of current "nickname" of a jvalue (e.g. 'jNO3')
+        (2) current_names - LIST of strs with all nicknames of UNIQUE j-values that are already "taken". 
+        
+    OUTPUTS: 
+    ------- 
+        (1) jname - STR of unique "nickname" of a jvalue that does NOT apprear in the list "current_names"
+        
+    REQUIREMENTS: 
+    ------------ 
+        LIBRARIES:           import re
+        CUSTOM FUNCTIONS:    None.
+    
+    USAGE: 
+    ------ 
+        CALLED WITHIN: create_jmap_dict() within make_GEOSCHEM_AllRxns_file() within make_GC_mechanism()
+        OUTPUT USAGE: Used to assign "nicknames" of J-values in GEOSChem_J.m and GEOSChem_AllRxns.m 
+            
+    AUTHOR: 
+    ------
+        Prof. Jessica D. Haskins (jessica.haskins@utah.edu) GitHub: @jhaskinsPhD
+    
+    CHANGE LOG: 
+    --------- 
+        11/06/23 - JDH Created. 
+    """
+    
+    ct =1; # Initialize counter variable
+    
+    while True: 
+        if jname in current_names: 
+            # Pull the "name" of the thing out. For "jCH3COOH", nm_only='CH3COOH'
+            nm_only=re.findall(r'j([a-zA-Z0-9]+)',jname)
+            if len(nm_only)==0: 
+                print(jname);sys.exit()
+            # Decide on a new suffix to try using (iterates through alphabet).
+            new_let='_'+chr(ord('`')+ct)
+            jname='j'+nm_only[0]+new_let
+            
+        if jname not in current_names: 
+            break
+        else: 
+            ct=ct+1  # Update counter var to try a new '_'+LETTER(ct) 
+   
+    return jname
 
 # A.1.1 L2-function used in create_jmap_dict() called within make_GEOSCHEM_AllRxns_file():
 def read_FJX_file(file): 
@@ -1495,21 +1550,18 @@ def create_jmap_dict(version:str, jmap_type='CrossSec_Match'):
                          '#2 Will make sure we have the actual FJX file to open and read.').with_traceback(sys.exc_info()[2])
         
     # Read in info about what Photolysis Rxns are Defined in this FJX File into a pandas dataframe!        
-    fjx= read_FJX_file(j2j_file);     
-    
-    fjx['J-Name']= list([''])*len(fjx)  # Create an empty list-like column to hold J-values... 
-    jdict=dict({}) # And also create an empty dictionary to hold results 
+    fjx= read_FJX_file(j2j_file);             
+    fjx['MCM_J2Use']= list([''])*len(fjx)  # Create an empty list-like column to hold J-values... 
     
     # Get FJX-Cross Section --> MCM J-Value Mapping done in do_jval_mapping.py
     cs=pd.read_excel(photolysis_paths['FJX_cross_sect_to_jvalues.xlsx']).fillna('') 
 
     # Assign J-Values in mechanism based on the Cross-Section used in FAST-JX: 
-    for ind in fjx.index: # All data is defined in the dataframe CS for this matching.
+    for ind in fjx.index: # All data is defined in the dataframe fjx for this matching.
         csect_need=fjx.loc[ind,'FJX_CrossSec'] # Cross-Section we need a J-Value for... 
         fjx_indx= fjx.loc[ind,'FJX_Index'] # Index of the Reaction in PHOTOL()
         
         if csect_need == '': # If You can't figure out what cross section is needed... 
-        
             # Figure out what reaction this is for... 
             rx_i= fjx.loc[ind,'Photolysis_Rxn'].split('->')[0].replace(' ','')
             
@@ -1517,20 +1569,49 @@ def create_jmap_dict(version:str, jmap_type='CrossSec_Match'):
             if any([nit_str in rx_i for nit_str in ['NIT+hv','NITs+hv']]) :
                 csect_need='NITP'
                 fjx.at[ind,'FJX_CrossSec']='NITP'
+                fjx.at[ind,'J-NickName']= 'j'+fjx.loc[ind,'Photolysis_Rxn'].split('+')[0].replace(' ', '')
                 
         # Get Index in dataframe, cs, where that cross-section defined: 
         has=cs.index[cs['FJX_Cross_Section']==csect_need]
         
         if len(np.unique(cs.loc[has,jmap_type]))==1: # If we have a match 
-                fjx.at[ind,'J-Name']=np.unique(cs.loc[has,jmap_type])[0]# Then use that in the df. 
-                
-        # Build a dictionary that maps PHOTOL(XX) to whatever J-value it should be in MCM. (J4, etc). 
+                fjx.at[ind,'MCM_J2Use']=np.unique(cs.loc[has,jmap_type])[0]# Then use that in the df. 
+        
+        # Fill in info about everything used in the output fjx_info dataframe! 
         if fjx.loc[ind,'Quantum_Yield'] != 1: 
-            jdict['PHOTOL('+str(fjx_indx)+')']= str(fjx.loc[ind,'Quantum_Yield'])+'.*('+fjx.loc[ind,'J-Name']+')'
+            fjx.at[ind, 'F0AM_Assignment'] = str(fjx.loc[ind,'Quantum_Yield'])+'.*('+fjx.loc[ind,'MCM_J2Use']+')'
         else: 
-            jdict['PHOTOL('+str(fjx_indx)+')']=fjx.loc[ind,'J-Name']
+            fjx.at[ind, 'F0AM_Assignment'] =fjx.loc[ind,'MCM_J2Use']
+            
+    # Get a list of all duplicate j-nicknames in FJX
+    unique_Jnames=set(); dupe_Jnames=[] 
+    for ji,j in enumerate(fjx.loc[:,'J-NickName']): 
+        if j in unique_Jnames and j not in dupe_Jnames: 
+            dupe_Jnames.append(j)
+        elif j not in unique_Jnames: 
+            unique_Jnames.add(j) 
 
-    return jdict
+    for j in dupe_Jnames: 
+        idx_matches= fjx.index[j==fjx.loc[:,'J-NickName']] # ind in fjx of all matches to a dupe name 
+        assigns=[fjx.loc[ix,'F0AM_Assignment'] for ix in idx_matches] 
+        is_diff=[True if assignment==assigns[0] else False for assignment in assigns]
+        
+        if not all(is_diff):# If some of the assignments vary for the same J-Nickname...  
+            for ii,ix in enumerate(idx_matches): # Loop over all mataches to this nickname
+                if (is_diff[ii]==False) or (ii==0): # If it doesn't match the assignment of the one already defined (1st occurance) or is 1st occurance...
+                    new=make_unique_Jname(j,list(fjx.loc[:,'J-NickName'])) # Update the name to be unique! 
+                    fjx.at[ix,'J-NickName']=new
+    
+    for ix in fjx.index: 
+        fjx.at[ix,'PHOTOL(IND)']= 'PHOTOL('+str(fjx.loc[ix,'FJX_Index'])+')'
+        fjx.at[ix, 'Info'] = '% PHOTOL('+str(fjx.at[ix,'FJX_Index'])+')'+' used for: '+fjx.at[ix,'Photolysis_Rxn']+' based on '+fjx.at[ix,'FJX_CrossSec']+' crossection with QY='+str(fjx.at[ix,'Quantum_Yield'])
+        fjx.at[ix,'GEOSChem_Jline']=   fjx.at[ix,'J-NickName']+'='+fjx.at[ix,'F0AM_Assignment']+'; % PHOTOL('+str(fjx.at[ix,'FJX_Index'])+') \n'+\
+                                       '% Used for: '+fjx.at[ix,'Photolysis_Rxn']+' based on '+fjx.at[ix,'FJX_CrossSec']+' crossection with QY='+str(fjx.at[ix,'Quantum_Yield'])
+    
+    # And also create a dictionary to hold results mapping PHOTOL(IND) => J-NickName in F0AM! 
+    jdict=dict(zip(fjx['PHOTOL(IND)'],["'" +j +"'" for j in fjx['J-NickName']]))
+    
+    return jdict, fjx
 
 ###############################################################################
 #-----------------(A) CREATE THE GEOSCHEM_AllRxns.m File ----------------------
@@ -1577,7 +1658,6 @@ def make_GEOSCHEM_AllRxns_file(kppfile:str, GC_version:str, jmap_type: str= 'Cro
                                 create a new one if it exists already. Default is False. 
             
         (8) verbose          - (OPTIONAL) BOOL of whether or not to print extras/progress.
-
     
     OUTPUTS: 
     --------
@@ -1617,16 +1697,17 @@ def make_GEOSCHEM_AllRxns_file(kppfile:str, GC_version:str, jmap_type: str= 'Cro
     CHANGE LOG: 
     ----------
             10/30/2023    JDH Created 
+            11/6/2023     JDH added need for fjx_df to get info on photo rxns... 
     
     """ 
     
     # Read in the right FJX file for this GC-Version and build the j-mapping 
     # dictionary to use to map KPP J's to F0AM J's. 
-    jmap_dict = create_jmap_dict(version=GC_version, jmap_type=jmap_type)
+    jmap_dict, fjx_df = create_jmap_dict(version=GC_version, jmap_type=jmap_type)
     
     # Parse the KPP file. Get list of rxns and rates we need to write a F0AM file.  
     var_info, rinfo, gas_dict, het_dict, nhet_dict, photo_dict, Mrxn_dict,gasM_dict=parse_kpp_main(kppfile) 
- 
+            
     # Pull out info about dif rxn types & get it in the format we need to pass to build_mech()
     nhet_rxns, nhet_index, nhet_rates, nhet_functs= KPP_Dict_to_F0AM_IO(nhet_dict,is_photo=False)
     gas_rxns,   gas_index,  gas_rates,  gas_functs= KPP_Dict_to_F0AM_IO(gas_dict, is_photo=False)
@@ -1635,7 +1716,7 @@ def make_GEOSCHEM_AllRxns_file(kppfile:str, GC_version:str, jmap_type: str= 'Cro
     gasM_rxns, gasM_index, gasM_rates, gasM_functs,rxn_rate_dict= KPP_Dict_to_F0AM_IO(gasM_dict, is_photo=False, make_rate_dict=True)
     
     # Same as above, but also do j-value mapping to translate FJX/KPP j-values into their F0AM counterparts! 
-    photo_rxns, photo_index, photo_rates, photo_functs= KPP_Dict_to_F0AM_IO(photo_dict,is_photo=True,jmap_dict=jmap_dict)
+    photo_rxns, photo_index, photo_rates, photo_functs= KPP_Dict_to_F0AM_IO(photo_dict,is_photo=True,jmap_dict=jmap_dict, fjx_df=fjx_df)
     
     rxns=gas_rxns+M_rxns+photo_rxns 
     rates=gas_rates+M_rates+photo_rates
@@ -1651,10 +1732,11 @@ def make_GEOSCHEM_AllRxns_file(kppfile:str, GC_version:str, jmap_type: str= 'Cro
         
         # Now parse the non-het mech to remove reactions of stuff only formed via a het rxn... 
         [sps, rxns, rates,gs,fs,rctt,prdd,r_yld,p_yld], rxn2drop=eliminate_dead_ends(het_info,info)
-        if verbose is True: 
-            print('Dropping these gas/ photolysis rxns from mech because they '+
-                  'involve species only formed in het reactions, which are not included:\n')
-            [print('    '+r) for r in rxn2drop]; print('\n')
+        
+        if verbose is True and len(rxn2drop) > 0: 
+                print('Dropping these gas/ photolysis rxns from mech because they '+
+                      'involve species only formed in het reactions, which are not included:\n')
+                [print('    '+r) for r in rxn2drop]; print('\n')
             
         # Rebuild your mech without these rections/ species they form... 
         out= fio.build_all_from_rxns(rxns, k_list=rates, sort_rxn_i=False, sort_rxn_list=False, verbose=verbose)
@@ -1697,16 +1779,14 @@ def make_GEOSCHEM_AllRxns_file(kppfile:str, GC_version:str, jmap_type: str= 'Cro
         # fio.write_mech_to_file(het_fname, hsp_list, [''],hrxns, hks,hgs,hfs,mech_title=het_title, 
         #                lines_to_add_before_mech=het_set_globals+het_call+het_jzero) 
     
-    
     # Make a header & add info to the gas/photolysis rxns file 
-    mech_title, mech_comments, set_globals, call, jzero = make_header_for_F0AM_mech(kppfile, GC_version, r_functs, photo_functs)
+    mech_title, mech_comments = make_header_for_AllRxns(kppfile, GC_version, rates, photo_rates,jmap_type)
 
     # Now, FINALLY, Write  gas/photolysis  mechanism to a F0AM file:  
     fio.write_mech_to_file(output_fname,  species_list=sp_list,  ro2_list=[''],
                            rxn_list=rxns,       k_list=ks,       g_list=gs,  f_list=fs,
                            mech_name=output_fname.replace('.m',''), mech_title=mech_title, 
                            mech_comments=mech_comments, 
-                           lines_to_add_before_mech=set_globals+call+jzero,
                            out_filepath=output_dir, overwrite=overwrite)
     
     # Unique list of all rate functions used in Het and regualr rxns... 
@@ -1715,7 +1795,7 @@ def make_GEOSCHEM_AllRxns_file(kppfile:str, GC_version:str, jmap_type: str= 'Cro
     else: 
         all_rfuncts=np.unique(r_functs).tolist()
         
-    return all_rfuncts, rxn_rate_dict
+    return all_rfuncts, rxn_rate_dict, fjx_df
 
 # %%###########################################################################
 #-----------------(B) CREATE THE GEOSCHEM_K.m File ----------------------------
@@ -1853,7 +1933,7 @@ def make_GEOSCHEM_K_file(kppfile:str, GC_version:str, template_file:str, all_rfu
                                 
                 # Create the line that defines the "KNames" 
                 if len(rxn_rate_dict[kname_i]['rxns'])==1:# If Kname_i is used in only 1 reactions. 
-                    kdec="Knames{i} = 'K_"+kname_i+"';% for: "+rxn_rate_dict[kname_i]['rxns'][0]+"\n"
+                    kdec="Knames{i} = "+kname_i+"; % for: "+rxn_rate_dict[kname_i]['rxns'][0]+"\n"
                 
                 else: # If this rate is used in MULTIPLE reactions.. 
                 
@@ -1861,8 +1941,8 @@ def make_GEOSCHEM_K_file(kppfile:str, GC_version:str, template_file:str, all_rfu
                     rx_ls='\n'.join(['%    ' +r for r in rxn_rate_dict[kname_i]['rxns']])
                     
                     # Craft the declariation line & line stating info about what rxns use this rate: 
-                    kdec0="Knames{i} = 'K_"+kname_i+"';\n"
-                    kdec1="% K_"+kname_i+"' is used as the rate in these reactions: \n"+ rx_ls 
+                    kdec0="Knames{i} = "+kname_i+";\n"
+                    kdec1="% "+kname_i+" is used as the rate in these reactions: \n"+ rx_ls 
                     kdec=kdec0+kdec1+" \n"
 
                 # Write actual call to function with args and add 'MET' as input!
@@ -1870,7 +1950,6 @@ def make_GEOSCHEM_K_file(kppfile:str, GC_version:str, template_file:str, all_rfu
 
                 # Add this indv rate defintion to the list of rate_defs
                 rate_def_ls.append(iline+kdec+kdef)
-                
                 
             # Join all rate_defs into a single string.... 
             rate_defs='\n'.join(rate_def_ls)
@@ -1969,28 +2048,28 @@ def make_GCrates_wrapper_funct(template_file, all_rfuncts):
         # On most lines we don't need to modify anything, but there are several 
         # "Trigger" strings where we need to insert info about the specific 
         # rates that are being defined in this file where we need to make modifications. 
-        
+    
         # Update the template's Commented Out Example to contain an example for importing "all" the rates used in this mech.
         if 'CMT_INSERT_FUNCTION_NAMES' in line.strip(): 
-            cmt_list_names=utils.join_list_for_MATLAB(',', all_rfuncts, insert='%       ')
-            cmt_list_names=cmt_list_names[8:-1] # remove first '%       '
+            cmt_list_names=utils.join_list_for_MATLAB(',', all_rfuncts, insert='    %       ')
+            cmt_list_names=cmt_list_names[12:] # remove first '    %       '
             line=line.replace('CMT_INSERT_FUNCTION_NAMES', cmt_list_names)
-        
+
         # Update the actual function where rate_keys are defined to include each 
         # of the actual functions referenced in this file with their names. 
         if 'INSERT_INDV_FUNCTION_NAMES' in line.strip():
             rfuncts_as_strs=["'"+rate+"'" for rate in all_rfuncts]
             list_names=utils.join_list_for_MATLAB(',', rfuncts_as_strs, insert='                ')
-            list_names=list_names[16:-1] # Remove first spaces... 
+            list_names=list_names[16:] # Remove first spaces... 
             line=line.replace('INSERT_INDV_FUNCTION_NAMES', list_names)
             
         # Update the master function where rate handles are defined as keys in dict! 
         if 'INSERT_INDV_FUNCTION_HANDLES' in line.strip(): 
             handles=['@'+funct for funct in all_rfuncts]
             list_handles=utils.join_list_for_MATLAB(',', handles,insert='                ')
-            list_handles=list_handles[16:-1] # Remove first spaces... 
-            line=line.replace('INSERT_INDV_FUNCTION_HANDLES', list_handles)
-        
+            list_handles=list_handles[16:] # Remove first spaces... 
+            line=line.replace('INSERT_INDV_FUNCTION_HANDLES', list_handles)            
+            
         # After modifying lines (if needed) in master function, save each to output list! 
         master_funct_lines.append(line)
         
@@ -2022,7 +2101,7 @@ def redo_function_header(line:str, spl_str:str='FUNCTION'):
         
     OUTPUTS: 
     --------
-        (1) matlab - Updated STR of input line in MATLAB compliant formatting. 
+        (1) matlab_dec - Updated STR of input line in MATLAB compliant formatting. 
     
     REQUIREMENTS: 
     -------------
@@ -2050,26 +2129,46 @@ def redo_function_header(line:str, spl_str:str='FUNCTION'):
             #   'FUNCTION ARRPLUS_ade( a0, d0, e0 ) RESULT( k )'  
        # Into MATLAB:  
         #   'function [k] = ARRPLUS_ade(a0, d0, e0 ) 
-        l=line.split(spl_str)[1].strip() 
-        l=l.split('RESULT') 
-         
-        out= utils._str_multi_replace(l[1].strip(), ['(', ')'], rep_all='').strip() 
-        funct_title_args=l[0].strip() # 'ARRPLUS_ade( a0, d0, e0 )'  
-         
-        matlab= 'function ['+out+'] = '+funct_title_args 
+        
+        # Split the input line at the word "FUNCTION" to just get the rest: 
+        l=line.split(spl_str)[1].strip() # e.g: ['', 'ARRPLUS_ade( a0, d0, e0 ) RESULT( k )']
+        
+        # Get the "result" output var ("k") isolated from the word "RESULT" and "(", and ")" 
+        l=l.split('RESULT') #e.g: ['ARRPLUS_ade( a0, d0, e0 )' , '( k )']
+        output_var= utils.str_multi_replace(l[1].strip(), ['(', ')'], rep_all='').strip() # e.g: 'k'
+        
+        # Now remove spaces from the function title & arguements: 
+        funct_title_args=l[0].strip() # e.g:  ARRPLUS_ade(a0,d0,e0)'  
+        
+        # Add "Met" as an input arg so we can always retrieve the Met Vars in MATLAB as inputs to this function: 
+        title_ls= funct_title_args.split('(') # e.g: ['ARRPLUS_ade', 'a0,d0,e0)']
+        new_title_args=title_ls[0]+'(Met,'+title_ls[1] # e.g: 'ARRPLUS_ade(Met,a0,d0,e0)']
+        
+        # Add it all back together how MATLAB expects: 
+        matlab_dec= 'function ['+output_var+'] = '+new_title_args.replace(' ', '') 
          
     else:  
         # Turn FORTRAN:  
-        #   'REAL(kind=dp) FUNCTION FALL(A0,B0,C0,A1,B1,C1,CF)' 
+        #   'REAL(kind=dp) FUNCTION FALL( A0, B0, C0, A1, B1, C1, CF )' 
         # Into MATLAB:  
-        #   'function [FALL] = FALL(A0,B0,C0,A1,B1,C1,CF)'
-         
-        l=line.split(spl_str)[1].strip() 
-        nm=l.split('(')[0].strip() 
-         
-        matlab= 'function ['+nm+'] = '+l 
+        #   'function [FALL] = FALL(Met,A0,B0,C0,A1,B1,C1,CF)'
+        
+        # Split the input line at the word "FUNCTION" to just get the rest & remove spaces
+        l=line.split(spl_str)[1].strip() # e.g: 'FALL(A0,B0,C0,A1,B1,C1,CF)'
+        
+        # Split the function on the "(" character: 
+        title_ls=l.split('(') # e.g. ['FALL', 'A0,B0,C0,A1,B1,C1,CF)']
+        
+        # Isolate just the function name (to get the output var) & remove spaces: 
+        output_var=title_ls[0].strip() # e.g: 'FALL'
+        
+        # Insert "Met" as an input arg so we can always retrieve the Met Vars in MATLAB as inputs to this function: 
+        new_title_args=title_ls[0]+'( Met,'+title_ls[1]
+        
+        # Add it all back together how MATLAB expects: 
+        matlab_dec= 'function ['+output_var+'] = '+new_title_args.replace(' ', '')  
  
-    return matlab  
+    return matlab_dec  
 
 # C.2 L1-function called inside make_import_GC_rates_file()    
 def insert_after_indent(line, insert):  
@@ -2324,13 +2423,13 @@ def make_import_GC_rates_file(rate_files:list, all_rfuncts:list, template_file:s
                                              '.and.':'&&', '.AND.':'&&', 
                                              '.or.': '||' , '.OR.': '||'}) 
                      
-                    line= utils._str_multi_replace(line,fortran_2_matlab) 
+                    line= utils.str_multi_replace(line,fortran_2_matlab) 
                      
                     # Remove things like double precision and 'Then' statements - unnecessary.  
-                    line = utils._str_multi_replace(line,['_dp', 'THEN'], rep_all='') 
+                    line = utils.str_multi_replace(line,['_dp', 'THEN'], rep_all='') 
                      
                     # Fix anything my substitutitons messed up. 
-                    line= utils._str_multi_replace(line,dict({'../':'./', '..*': '.*', '..^':'.^', 
+                    line= utils.str_multi_replace(line,dict({'../':'./', '..*': '.*', '..^':'.^', 
                                                        ' .* ':'.*', ' ./ ':'./',
                                                        '); ) ;': '));', '); ;': ');'})) 
                     
@@ -2341,7 +2440,7 @@ def make_import_GC_rates_file(rate_files:list, all_rfuncts:list, template_file:s
                         else:  
                             cmt_i=line.index('%') 
                             line=line[0:cmt_i]+';'+line[cmt_i:] 
-                            
+                    
                     # Collect all lines from every function in a dictionary .... 
                     if not any([True if e in line else False for e in valid_ends ]): 
                         if line.strip() not in ['%', ';', '']: # Don't store empties! 
@@ -2382,7 +2481,8 @@ def make_import_GC_rates_file(rate_files:list, all_rfuncts:list, template_file:s
             outF.write(ln+'\n')
     
     # Write a line to retrieve all global vars inside each function. 
-    get_globals='    [TEMP, PRESS, NUMDEN, H2O, TEMP_OVER_K300, K300_OVER_TEMP]= getGlobal_MetVars(); % Retrieve global vars' 
+    get_globals='    % Pass input struct, "Met" to function "extract_MetVars()" to get vars this function may depend on...\n'+ \
+                '    [TEMP, PRESS, NUMDEN, H2O, TEMP_OVER_K300, K300_OVER_TEMP,INV_TEMP,SR_TEMP,RELHUM]= extract_MetVars(Met);\n' 
     for key in fdict: # Loop over all functions 
         glbs_tf=False
         ln_list=fdict[key] # list of lines we need to write for each function. 
@@ -2392,7 +2492,7 @@ def make_import_GC_rates_file(rate_files:list, all_rfuncts:list, template_file:s
                 outF.write(get_globals+'\n'); glbs_tf=True
 
     outF.close() # Close the output file  
-    print('MATLAB compliant version of gckpp_Rates.F90 called in "GEOCHEM_K.m" to define all rate functions saved at: '+rate_file ) 
+    print('MATLAB compliant version of gckpp_Rates.F90 called in "GEOSCHEM_K.m" to define all rate functions saved at: '+rate_file ) 
     
     return
 
@@ -2483,7 +2583,7 @@ def make_GC_mechanism(kppfile, rate_files, GC_version:str, jmap_type:str, includ
                       photolysis_paths=photolysis_paths)
     
     # Write the GEOSChem_AllRxns.m file & get output we need to write GEOSChem_K.m file:
-    all_rfuncts,rxn_rate_dict=make_GEOSCHEM_AllRxns_file(kppfile = kppfile, 
+    all_rfuncts,rxn_rate_dict, fjx_df=make_GEOSCHEM_AllRxns_file(kppfile = kppfile, 
                                                          GC_version = GC_version, 
                                                          jmap_type = jmap_type, 
                                                          include_het_rxns = include_het_rxns,   
@@ -2504,6 +2604,7 @@ def make_GC_mechanism(kppfile, rate_files, GC_version:str, jmap_type:str, includ
     # Create import_GC_rates.m file where all rate functions are defined which is 
     # referenced and used as is without needing modifications in the GEOSChem_K.m file. 
     if type(rate_files)==str: rate_files=[rate_files]
+    
     fdict=make_import_GC_rates_file(rate_files=rate_files, 
                                     all_rfuncts=all_rfuncts, 
                                     template_file= template_paths['import_GC_rates_template.txt'],
@@ -2512,7 +2613,7 @@ def make_GC_mechanism(kppfile, rate_files, GC_version:str, jmap_type:str, includ
                                     output_dir=output_dir, 
                                     overwrite=overwrite)
     
-    return 
+    return fjx_df
 
 
 

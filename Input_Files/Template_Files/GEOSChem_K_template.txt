@@ -18,16 +18,13 @@ function K = GEOSCHEM_K(Met)
 %
 % List of all rate functions referenced in this file that must be imported for 
 % for this mechanism to work. This import should be automatically done for you, 
-% so this list is just for your reference.
+% using import_GC_rates() so this list is just for your reference.
 %
 %    **LIST_OF_RATE_FUNCTS**
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%    Initialize Rate Vars/Functions    %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Pull out all vars in the input structure, Met, as variables we can use.
-struct2var(Met) 
 
 % Define the total number of rate constants 
 nk = **NUMBER_OF_RATE_CONSTANTS**; 

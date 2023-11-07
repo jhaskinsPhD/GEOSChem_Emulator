@@ -80,6 +80,25 @@ function out =  import_GC_rates(cell_of_rates_to_get)
 
 end
 
+function [TEMP, PRESS, NUMDEN, H2O, TEMP_OVER_K300, K300_OVER_TEMP,INV_TEMP,SR_TEMP,RELHUM] = extract_MetVars(Met) 
+    % This function is used to extract invidividual met vars from the structure Met and is 
+    % called at the top of all the rate functions defined in this file so they have access 
+    % to these variables to use. These vars defined as "globals" in GEOS-Chem and don't appear 
+    % as function input vars, so we just pass the struct "MET" as input to each function and 
+    % use this one to then extract them out in each function ... 
+	
+    TEMP= Met.T;                % Temperature (K)
+    PRESS= Met.P;               % Pressure (mbar / hPa) (GC uses hPa)
+    NUMDEN= Met.M;              % Number density (molecules/cm3)
+    H2O= Met.H2O;               % Water vapor number density (molecules/cm3)
+    TEMP_OVER_K300= Met.T./300; % Temp (K) divided by 300 K. 
+    K300_OVER_TEMP= 300./Met.T;  % 300K divided by Temperature(K)
+    INV_TEMP= 1./Met.T;         % Inverse Temperature (1/K) 
+    SR_TEMP = sqrt(Met.T);      % Square root of Temperature (K^0.5)
+    RELHUM = Met.RH;            % Relative Humididty as a percentage 
+	
+end
+
 function [k] = None() 
     disp('Function pointed to "None", meaning you passed an arg to import_GC_rates() that it did not understand.')
     k=[];
