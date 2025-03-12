@@ -1061,19 +1061,21 @@ def fix_multiline_rxns(line, line_stripped, count, kppfile):
     CHANGE LOG: 
     ----------
         09/28/2023    JDH Created 
+        11/15/2024: JDH added "':' not in line_stripped: " to while statement 
+                    to work with Alfie's custom version of 14.5.0... 
                 
     """    
-    
+       
     # Read more lines til you get the entire reaction, rate & comments in a single line!  
-    while line_stripped.endswith('+')==True:  
+    while line_stripped.endswith('+')==True or ':' not in line_stripped:  
         nline = kppfile.readline()   # Read next line from file 
         count=count+1                 # Update line counter variable  
         line = line+ nline.strip()    # append this new line to our current line str.  
         line_stripped=line.strip().replace(' ', '') # Update line_stripped to not contain spaces! 
-    
+            
     # Now that you got the entire reaction on this line, make sure to replace any new line characters with a space! 
     line=line.replace('\n', ' '); line_stripped=line_stripped.replace('\n', ' ') 
-    
+        
     # Return the count, new line, and line_stripped vars to continue on. 
     return line, line_stripped, count
 
@@ -1243,10 +1245,12 @@ def parse_kpp_main(kppfile):
         # You are no longer in section defining fix vars if #equations appears in the current line!   
         file_location['in_deffix']   = False if '#equations' in line_stripped.lower() else file_location['in_deffix'] 
         # You are no longer in the gas phase reaction section once both '//' and 'heterogeneous' appear in the current line!
-        file_location['in_gas_rxns'] = False if all([item_i in line_stripped.lower()  for item_i in ['//','heterogeneous']]) else file_location['in_gas_rxns']  
+        file_location['in_gas_rxns'] = False if all([item_i in line_stripped.lower()  for item_i in ['//','heterogeneous', 'chemistry', ' reactions']]) else file_location['in_gas_rxns']  
         # You are no longer in the photolysis reaction section once both '//' and 'photolysis' appear in the current line! 
-        file_location['in_het_rxns'] = False if all([item_i in line_stripped.lower()  for item_i in ['//','photolysis']]) else file_location['in_het_rxns']  
-           
+        file_location['in_het_rxns'] = False if all([item_i in line_stripped.lower()  for item_i in ['//','photolysis', 'reactions']]) else file_location['in_het_rxns']  
+          
+        true_keys = [key for key, value in file_location.items() if value]
+
         # Break if reached end of file, don't attempt to parse line. 
         if count>num_lines: break  
     
@@ -1273,8 +1277,9 @@ def parse_kpp_main(kppfile):
                     #-------------------------------------------------------------
                     #   ln 42   'MVKOHOO + HO2 = 0.360MCO3 + 0.360GLYC +'   **(Would trigger when parsing this line)** 
                     #   ln 43   '  0.335MVKHP + 0.050MGLY + 0.050CH2O :  GCARR(2.12E-13, 0.0E+00, 1300.0); {2019/11/06; Bates2019; KHB}' 
+
                     line, line_stripped, count= fix_multiline_rxns(line, line_stripped, count, file)
-            
+
                 # (After fixing if necessary), parse this reaction and add all info about this rxn to lists: 
                 rinfo=parse_rxns_and_rates(line, rinfo, file_location)
 
