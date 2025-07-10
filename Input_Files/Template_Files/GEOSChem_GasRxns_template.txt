@@ -1,0 +1,44 @@
+% F0AM-compliant GEOS-Chem Mechanism for version **GC_VERSION** generated
+% by the GEOS-Chem Emulator on **THE_DATE** from the following KPP file(s):
+%    **KPP_FILE_PATH**
+%
+%    Photolysis Frequency Mapping JMAP_TYPE = **JMAP_TYPE**
+%    # of (non-het) species                 = **N_SPECIES**
+%    # of (non-het) reactions               = **N_RXNS**
+% 
+% The following (named) photolysis rates must be defined in "GEOSChem_J.m"
+% for this mechanism to work:
+%    required_Js = {**HDR_LIST_OF_REQUIRED_J_NAMES**};
+%
+% The following rate functions used in the named reaction rates used here/
+% called within "GEOSCHEM_K.m" must be defined in the "import_GC_rates.m"
+% file for this mechanism to work: 
+%    required_rates = {**HDR_LIST_OF_REQUIRED_RATE_FUNCTIONS**};
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%   BEGIN F0AM  MECHANISM     %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SpeciesToAdd = {**SPECIES_LIST**};
+
+RO2ToAdd = {}; % In a GEOS-Chem Mechanism, this list should ALWAYS be empty.
+
+AddSpecies
+
+**STOP_IF_NO_EXCLUDED_RXNS**
+% =========================================================================
+% REACTIONS INVOLVING SPECIES FORMED ONLY VIA HETEROGENEOUS RXNS
+% =========================================================================
+% NOTE: Only gas-phase and photolysis reactions are included in this file.
+%       Thus, heterogeneous reactions in the original KPP file are excluded
+%       herein. The following species were identified as those forming ONLY
+%       from heterogeneous reactions that are NOT included in this file:
+%       
+%       het_only_species = {**HET_SPECIES_LIST**};
+%       
+%       The reactions in the section below that are commented out are
+%       gas/photolysis reactions involving one or more of these species. Thus,
+%       these reactions are irrelevant to include in a mechanism without
+%       heterogenous reactions.These excluded reactions are only retained 
+%       here as comments so this file is as complete of a transciption of 
+%       the input KPP file as possible. These species/rxns are NOT included 
+%       in the reaction/species count in the header above.

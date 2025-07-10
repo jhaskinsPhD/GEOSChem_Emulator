@@ -1,4 +1,4 @@
-function out =  import_GC_rates(cell_of_rates_to_get) 
+function out =  import_GC_rates_v1452(cell_of_rates_to_get) 
 
     % Function to make these local functions available outside this file.
     % This "main function" returns function handles for each of the local functions.
@@ -43,7 +43,7 @@ function out =  import_GC_rates(cell_of_rates_to_get)
     rate_dict=dictionary(rate_keys,rate_values);
 
     % If the user wants to import all the rates, then grab all keys in rate_dict.  
-    if str_in_cell({'all'}, cell_of_rates_to_get)
+    if any(strcmp('all', cell_of_rates_to_get))
         cell_of_rates_to_get=rate_keys;
     end
     
@@ -55,7 +55,7 @@ function out =  import_GC_rates(cell_of_rates_to_get)
     % Loop over cell_of_rates_to_get and add values from dict to cell, "out"
     for i=1:length(cell_of_rates_to_get)
         rate_i=cell_of_rates_to_get(i); 
-        if str_in_cell(rate_i, rate_keys)==1
+        if any(strcmp(rate_i, rate_keys))
             % If this rate is defined in this function... then grab it! 
             out(i)=rate_dict(rate_i); got_it(i)=1;
         else
@@ -80,22 +80,22 @@ function out =  import_GC_rates(cell_of_rates_to_get)
 
 end
 
-function [TEMP, PRESS, NUMDEN, H2O, TEMP_OVER_K300, K300_OVER_TEMP,INV_TEMP,SR_TEMP,RELHUM] = extract_MetVars(Met) 
+function  [temp, press, numden, h2o,temp_over_k300, k300_over_temp,inv_temp,sr_temp,relhum] = extract_MetVars(Met) 
     % This function is used to extract invidividual met vars from the structure Met and is 
     % called at the top of all the rate functions defined in this file so they have access 
     % to these variables to use. These vars defined as "globals" in GEOS-Chem and don't appear 
     % as function input vars, so we just pass the struct "MET" as input to each function and 
     % use this one to then extract them out in each function ... 
 	
-    TEMP= Met.T;                % Temperature (K)
-    PRESS= Met.P;               % Pressure (mbar / hPa) (GC uses hPa)
-    NUMDEN= Met.M;              % Number density (molecules/cm3)
-    H2O= Met.H2O;               % Water vapor number density (molecules/cm3)
-    TEMP_OVER_K300= Met.T./300; % Temp (K) divided by 300 K. 
-    K300_OVER_TEMP= 300./Met.T;  % 300K divided by Temperature(K)
-    INV_TEMP= 1./Met.T;         % Inverse Temperature (1/K) 
-    SR_TEMP = sqrt(Met.T);      % Square root of Temperature (K^0.5)
-    RELHUM = Met.RH;            % Relative Humididty as a percentage 
+    temp= Met.T;                % Temperature (K)
+    press= Met.P;               % Pressure (mbar / hPa) (GC uses hPa)
+    numden= Met.M;              % Number density (molecules/cm3)
+    h2o= Met.H2O;               % Water vapor number density (molecules/cm3)
+    temp_over_k300= Met.T./300; % Temp (K) divided by 300 K. 
+    k300_over_temp= 300./Met.T;  % 300K divided by Temperature(K)
+    inv_temp= 1./Met.T;         % Inverse Temperature (1/K) 
+    sr_temp = sqrt(Met.T);      % Square root of Temperature (K^0.5)
+    relhum = Met.RH;            % Relative Humididty as a percentage 
 	
 end
 

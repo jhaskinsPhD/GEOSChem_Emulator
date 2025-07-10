@@ -1,0 +1,27 @@
+% F0AM-compliant GEOS-Chem Mechanism for version **GC_VERSION** generated 
+% by the GEOS-Chem Emulator on **THE_DATE** from the following KPP file: 
+%    **KPP_FILE_PATH**
+%
+% Only heterogenous reactions in the GEOS-Chem mechanism are included in this
+% file. Thus, this is a sub-selection of the mechanism in the KPP file above 
+% intended to be used with the reactions in "GEOSCHEM_GasRxns.m" / not on its own.
+%
+% Thus, this mechanism includes: 
+%     # of ADDITIONAL species  = **N_SPECIES**        
+%     # of ADDITIONAL reactions = **N_RXNS**  
+% including ONLY those species/ reactions that are NOT declared in 
+% "GEOSChem_GasRxns.m".
+%
+% The following named reaction rates are referenced in this file & must be 
+% defined in "GEOSCHEM_K.m" (as named rxns) with the functions defined in 
+% the "import_GC_rates.m" file. 
+%    **HDR_LIST_OF_REQUIRED_RATE_FUNCTIONS**
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%    BEGIN F0AM MECHANISM     %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SpeciesToAdd = {**SPECIES_LIST**};
+
+RO2ToAdd = {}; % In a GEOS-Chem Mechanism, this list should ALWAYS be empty. 
+
+AddSpecies

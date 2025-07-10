@@ -13,8 +13,278 @@ import numpy as np
 from collections import defaultdict
 
 ###############################################################################
+# Functions used to convert math in fortran files to MATLAB syntax. 
+# Called from within parse_rxns_and_rates()from within read_kpp(). Here because 
+# they are also called from make_import_GC_rates() 
+###############################################################################
+
+def _convert_fortran_operators(in_string): 
+    """Function to take an input string and convert (select) FORTRAN style 
+     mathematical function names within it into modern function names. 
+     
+     Specifically: 
+        - Converts function names EXP, LOG, LOG10 to lowercase.
+        - Converts ".FALSE. to 'false' and '.TRUE.' to 'true' 
+        
+    REQUIREMENTS: import re 
+    
+    USAGE: Called within parse_rxns_and_rates() from within read_kpp() 
+           to clean up any lines with rate functions containing these math operators  
+    """
+
+    # Define a list of tuple pairs holding the function name & a regex pattern to match it: 
+    operators=[('EXP', r'EXP\((.*?)\)'),      # Pattern to match 'EXP(' ... ')'
+               ('LOG', r'LOG\((.*?)\)'),      # Pattern to match 'LOG(' ... ')'
+               ('LOG10', r'LOG10\((.*?)\)')   # Pattern to match 'LOG10(' ... ')'
+               ] 
+        
+    # Initialize "out_string" as copy of input (what's returned if no subs needed).
+    out_string=in_string
+        
+    # Loop over some common math function names & convert them to lowercase 
+    # while maintaining function arguments entirely. 
+    for fname, funct_pattern in operators: 
+        # Use the re.sub() function from the regex module to do all this at once: 
+        #   
+        #    (1) Find all substrings in the input string that match the 
+        #        fortran function pattern. 
+        #
+        #    (2) For each match, call the lambda function, passing in the match 
+        #        object to generate a new replacement substring. It converts the 
+        #        function name to lowercase using 'fname.lower()' while maintaining 
+        #        the original arguments to the function with 'm.group(1)'.
+        #
+        #    (3) Replace each matched substring with the new substring returned 
+        #        by the lambda function. 
+        #
+        #    (4) Assign the result to a single output string after all substring
+        #        replacements (on this loop) have been completed. 
+        #
+        # This results in replacing  'EXP(1.23)'   with 'exp(1.23)'     OR ... 
+        #                            'LOG10(4.56)' with 'log10(4.56)'
+
+        out_string = re.sub(funct_pattern,lambda m: f"{fname.lower()}({m.group(1)})",out_string)
+    
+    # Now just do some simple string replacement for the true/false operators... 
+    out_string=out_string.replace('.FALSE.', 'false')
+    out_string=out_string.replace('.TRUE.', 'true')
+        
+    return out_string
+        
+def _convert_fortran_numbers(in_string:str ):
+    """ Function to take an input string and convert Fortran-style numeric literals 
+        into modern scientific notation syntax. Used to convert numbers in KPP 
+        files to something you can write to a MATLAB/python/CSV/excel file. 
+        Used to convert strings with reaction rates like:
+            
+                     In KPP File:                        as Output 
+            'GCARR_ac(1.00d-14, -490.0d0)'   to   'GCARR_ac(1.00e-14, -490.0)'
+
+        Can handle: 
+        - Fortran exponents like 'd', 'D', 'e', 'E' (e.g., '1.23d-4', '5.67D+8')
+        - Removes the '_dp' suffix used in Fortran for double precision #s
+
+    INPUTS: 
+    ------  
+        (1) in_string - single STR containing (maybe) some numerical FORTRAN notation 
+
+    OUTPUTS: 
+    --------
+        (2) out_string - updated STR with FORTRAN numbers converted to (modern) math.
+
+    USAGE: 
+    ------ 
+        Called Within: parse_rxns_and_rates() from within read_kpp() from 
+                       within make_GEOSCHEM_AllRxns_file(). Can be used as standalone. 
+
+    REQUIREMENTS: 
+    -------------
+        LIBRARIES:           import re
+
+        CUSTOM FUNCTIONS:    nested/inner/helper function: _fnum_replace() 
+
+    AUTHOR: 
+    -------
+        Prof. Jessica D. Haskins (jessica.haskins@utah.edu) GitHub: @jhaskinsPhD
+    """
+    ###########################################################################
+    #  Part I: Transform Fortran Style NUMBERS into MATLAB style numbers... 
+    ###########################################################################
+
+    # Define a regular expression pattern to match FORTRAN-style numbers: 
+    fnum_pattern = re.compile(r'([-+]?\d*\.\d+|[-+]?\d+)([dDeE]([+-]?\d+))?(_dp)?')
+    
+    #  ^^This will match numbers that may start with an optional + or - sign.
+    # The number can either be a decimal or an integer. It can have an exponent 
+    # part, which starts with either: 'd', 'D', 'e', or 'E', followed by an optional
+    # '+' or '-', and then digits (for example, d-4 or E+10). Finally, it can 
+    # optionally end with the suffix '_dp', which is used in Fortran to indicate 
+    # double precision numbers. After finding these, string subs are only done 
+    # when the number matched has a dif format (eg. doesn't mess with integers).
+    # Example matches &(subsequent) substitions below: 
+    #      '42'        -->  '42'       (intergers are same).
+    #      '10.3e5'    -->  10.3e5'    (no update needed). 
+    #      '-5.67d-8'  -->  '-5.67e-8' 
+    #      '3.29D+00'  -->  '3.29'  # (when exp evals to 1, removes exp)
+    #      '-5.0E-3_dp'-->  '-5.0e-3'
+
+    def _fnum_replace(match):
+        """
+        Nested/Helper/Local function to convert a matched Fortran number to 
+        more modern scientific notation format. 
+        
+        Inputs:  match - a re.Match object (not tuple/ it should have methods 
+                                            like .group() within it). 
+        Outputs - a replacement string that has: 
+                        - exponents noted ONLY with 'e' (not 'd', 'D', or 'E"). 
+                        - no '_dp' suffix 
+                        - no exponent if the exponent was zero (e.g.'E+00','d0', 'e0')
+                        - an exponent sign ONLY if negative (e.g. no e+4).  
+        """
+        
+        # Extract the relevant groups from the (individual) match:
+        number = match.group(1)        # base # (e.g., '1.23', '-4.56')
+        exponent = match.group(3)      # Sign and number pf exponent only (e.g., '-2', '+3', or None)
+        
+        if exponent is None or exponent == '':
+            # Case 1: There is no explicit 'e'/'E'/'d'/'D'in the matched pattern 
+            #         Occurs for plain old numbers like '-3.14' or '+42'.
+            #         So, just return the number itself! 
+                return number
+        else:
+            # Case 2: The number has an explicit exponent (e.g. "1.23e-4", "5.67E+8")
+            #          Convert exponent str to integer is (e.g. -4, +8, 0, etc.). 
+            exponent_value = int(exponent)
+            if exponent_value == 0:
+                # Case 2a: If the value of exponent is 0, just remove it / only return number. 
+                #          (e.g. '2.14d0' --> '2.14' or '42eE+00' --> '42'). 
+                return number
+            else:
+                # Case 2b: If the exponent is not 0/''/None & does exist, then 
+                #          return it using the 'e' notation between the # & exponent 
+                #          VALUE. Only retains sign of exponent sign if negative. 
+                #          (e.g. '3.14d-4'--> '3.14e-4' but '3.14e+4'--> '3.14e4'
+                return f"{number}e{exponent_value}"
+
+    # Use the re.sub() function from the regex module to: 
+    #    (1) Find all substrings in the input string that match the fortran number pattern. 
+    #    (2) For each match, call the internal _fnum_replace() function, passing 
+    #        in the match object to generate a new replacement substring (bye Fortran syntax!)
+    #    (3) Replace each matched substring with the new substring returned by _fnum_replace(). 
+    #    (4) Assign the result to a single output string after all substring replacements. 
+    
+    out_string = fnum_pattern.sub(_fnum_replace, in_string)
+
+    return out_string
+  
+    
+ ###############################################################################
+ # Functions used to convert from categorical dict to record index dict... 
+ ############################################################################### 
+def _convert_to_index_dict(category_dict):
+    """
+    Convert categorical dict into a record based index dictionary. 
+        
+   (INPUT) 'category_dict':  (Useful for grouping info abou all rxns by category)
+       
+       - KEYS = string CATEGORIES, VALUES = a LIST of items.
+       - All lists under each key have equal lengths.
+       - Elements at a particular index in each list corresponds to 
+         a matching record in any other list from a dif cateogory key. 
+        
+         #               INPUT DICT. STRUCTURE: 
+         #   category key   = list[index_0 ,  ... ,  index_n ]
+         dict ['rxns']      = [  'A+B=C+D' ,  ... , 'D+E=F+G' ] 
+         dict ['rct_cmpds'] = [ ['A','B']  ,  ... , ['D,'E']  ] 
+                                                     
+         
+   (OUTPUT) 'index_dict' : (useful for getting all info about a single rxn) 
+   
+        - KEYS= integer INDEX, VALUES= Sub-Dictionary. 
+        - Sub-dictionaries have same string CATEGORY KEYS as input dict, with
+          that point to individual elements from the lists in the input dict.
+        - The index key mirrors the position of elements in the intput dict lists
+        
+        #                    OUTPUT DICT. STRUCTURE 
+        # list index key = dict{ category keys:  values in list at index_key}
+        dict [0]   = {'rxns: 'A+B=C+D' , 'rct_cmpds': ['A','B'] } 
+        dict [...] = {'rxns:    ...    , 'rct_cmpds': ...       } 
+        dict [n]   = {'rxns: 'D+E=F+G' , 'rct_cmpds': ['D','E'] } 
+    """
+    # initialize output dictionary
+    index_dict = {}
+    
+    # Figure out how many indvidual records there are (e.g. len of lists) 
+    list_len = len(next(iter(category_dict.values())))
+    
+    # Loop over each index in all lists: 
+    for indx in range(list_len):
+        # Inialize the sub-dictionary: 
+        index_dict[indx] = {}
+        # Loop over each categocial key: 
+        for cat_key in list(category_dict.keys()):
+            # Assign value in output dict for this cateogry at this ind. 
+            index_dict[indx][cat_key] = category_dict[cat_key][indx]
+    
+    return index_dict
+
+def _convert_to_category_dict(index_dict):
+    """
+     Convert a record based index dictionary into a categorical dictionary .
+          
+    (INPUT) 'index_dict' : (useful for getting all info about a single rxn) 
+    
+         - KEYS= integer INDEX, VALUES= Sub-Dictionary. 
+         - Sub-dictionaries have same string CATEGORY KEYS as input dict, with
+           that point to individual elements from the lists in the input dict.
+         - The index key mirrors the position of elements in the intput dict lists
+         
+         #                    INPUT DICT. STRUCTURE 
+         # list index key = dict{ category keys:  values in list at index_key}
+         dict [0]   = {'rxns: 'A+B=C+D' , 'rct_cmpds': ['A','B'] } 
+         dict [...] = {'rxns:    ...    , 'rct_cmpds': ...       } 
+         dict [n]   = {'rxns: 'D+E=F+G' , 'rct_cmpds': ['D','E'] } 
+                       
+    (OUTPUT) 'category_dict':  (Useful for grouping info about all rxns by category)
+        
+        - KEYS = string CATEGORIES, VALUES = a LIST of items.
+        - All lists under each key have equal lengths.
+        - Elements at a particular index in each list corresponds to 
+          a matching record in any other list from a dif cateogory key. 
+         
+          #               OUTPUT DICT. STRUCTURE: 
+          #   category key   = list[index_0 ,  ... ,  index_n ]
+          dict ['rxns']      = [  'A+B=C+D' ,  ... , 'D+E=F+G' ] 
+          dict ['rct_cmpds'] = [ ['A','B']  ,  ... , ['D,'E']  ] 
+     """
+    # Get all category keys: 
+    all_cat_keys = next(iter(index_dict.values())).keys()
+    
+    # Inialize output dict with category keys pointing to empty lists: 
+    category_dict = {cat_key: [] for cat_key in all_cat_keys}
+
+    # Loop over each index (sorted so stuff is all in same order!!!) 
+    for indx in sorted(index_dict.keys()):
+        # At this index, loop over all category keys 
+        for cat_key in all_cat_keys:
+            # Append the contents for this category to the appropriate list. 
+            category_dict[cat_key].append(index_dict[indx][cat_key])
+    
+    return category_dict
+
+
+
+###############################################################################
 # GENERAL UTILITY FUNCTIONS used in make_GCAllRxns.py & make_import_GC_rates.py
 ###############################################################################
+
+  
+def _edit_line(line:str, placeholder:str, val2insert:str): 
+ 
+    nline = line.replace(placeholder, val2insert) if placeholder in line.strip() else line 
+        
+    return nline 
+
 def str_multi_replace(string:str, baddies, rep_all:str=''): 
     """ Replace multiple items in a string. 
     
@@ -239,7 +509,7 @@ def find_in_list(val2find, inlist, replace_with='', drop_all=False, drop_first=F
 
 def join_list_for_MATLAB(join_str:str, ls0:list,min_len:int =75, add_semicolon:bool =False, 
                          preface:str ='', comment:bool=False, comment_skip:list=list([]),
-                         insert:str='',insert_skip:list=list([])): 
+                         insert:str='',insert_skip:list=list([]),adj_ln1_width:int=0): 
     """Function to take a list and join it together with a delimiter as str.join(ls) does 
     except, you actually insert a MATLAB style line break where the lines start to get 
     long. Doesn't append delimiter to beginning or end.
@@ -277,55 +547,79 @@ def join_list_for_MATLAB(join_str:str, ls0:list,min_len:int =75, add_semicolon:b
     AUTHOR: 
     -------
         Dr. Jessica D. Haskins (jessica.haskins@utah.edu) GitHub: @jhaskinsPhD
-        
-    CHANGE LOG: 
-    -----------
-        01/14/2022   JDH created for pyMCM
-        10/31/2023   JDH copy/pasted to GC Emulator, updated documentation. 
                                  
     """
     # Parse inputs options: 
-    ad=';' if add_semicolon is True  else '' 
-    if comment is True and len(preface)>0: preface='%'+preface 
-    
-    # Make a copy of the input so you're not changing the original! 
-    ls=ls0.copy()
+    end_char=';' if add_semicolon is True  else '' 
+        
+    # Make a copy of the input list to join so you're not changing the original! 
+    ls2join=ls0.copy()
     
     # Initialize vars: 
     ln_ls=list([]); lines=list([]); ln_num=1; 
-    
-    # Loop over all items in the list to join: 
-    for i, item in enumerate(ls): 
+      
+    if len(preface) > 0: 
+        # Add insert before preface if asked: 
+        if 1 not in insert_skip: 
+            preface=insert+preface
+            
+        # Ensure preface is a comment if its supposed to be: 
+        if comment is True and 1 not in comment_skip and preface.startswith('%') is False: 
+            preface='%'+preface
+            
+        # Now that we've added the adjustments to the preface as needed, figure out 
+        # what the new first line len should be so it doesn't spill over min_len 
+        # when the length of the preface is included: 
+        ln1_len= min_len-len(preface)
+        ln1_has_insert=True
+    elif adj_ln1_width>0: 
+        ln1_len= np.max([1,min_len-adj_ln1_width])
+        ln1_has_insert=False
+    else: 
+        ln1_len=min_len
+        ln1_has_insert=False
+
+    # Loop over all items in the input list to join: 
+    for i, item in enumerate(ls2join): 
         
         # Make sure the item is a string... Join only takes string lists! 
         if type(item) != str: item=str(item) 
         
         # Don't add a blank to the list of stuff to join...  
         if len(item) > 0: 
-            # Add the not empty string to the list of things to join on THIS line.
+            
+            if len(ln_ls)==0: # Indicates we're on a new line: 
+                
+                # Check to see if the user wants to insert anything before this new line: 
+                if insert != '' and ln_num not in insert_skip: 
+                    # Don't add insert on line 1 if the preface already has it... 
+                    if (ln_num>1) or ((ln_num==1) and (ln1_has_insert is False)): 
+                        item=insert+item
+                    
+                # Make it a comment if they wanted:         
+                if comment is True and ln_num not in comment_skip: 
+                    # Don't add comment on line 1 if the preface already has it...
+                    if (ln_num>1) or ((ln_num==1) and (ln1_has_insert is False)): 
+                        if item.startswith('%') is False: item='%'+item
+                              
+            # Add the (not empty) string to the list of things to join on THIS line.
             ln_ls.append(item) 
             
             # Join everything in ln_ls with this new addition together with "join_str" 
             ln= join_str.join(ln_ls) 
-            
+                        
             # If the length of the new string is greater than your min length, you need a new line! 
             # or if you're on the very LAST item in the list, then you need to add it to the list of stuff to write. 
-            if (len(ln) > min_len) or (i== len(ls)-1): 
-            
-                # Check to see if the user wants to insert anything before this new line: 
-                if insert != '' and ln_num not in insert_skip: ln=insert+ln 
-                
-                # Make it a comment if they wanted:         
-                if comment is True and ln_num not in comment_skip: ln='%'+ln
-                
+            if (len(ln) > min_len) or (i== len(ls2join)-1) or ((ln_num==1) and (len(ln) > ln1_len)):
+        
                 lines.append(ln) # Append this full line to the list of lines to join at the end! 
                
                 ln_num= ln_num+1 # Update the line number to be the NEXT line... 
-                ln_ls=[]; # reset list holding items to put on a single line 
+                ln_ls=[];        # Reset list holding items to put on a single line 
                 
     # Join each line together with the MATLAB line break and new line character 
     to_join= join_str+'...\n' 
-    out_str=preface+to_join.join(lines)+ad
+    out_str=preface+to_join.join(lines)+end_char
     
     return out_str
 
@@ -592,52 +886,44 @@ def check_filename(filename:str='', default_name:str= '', ext:str='',
           # os.path.join() adds it for us when we make fullname...  
         return [opath+'/', just_file]
 
-
-def get_my_relative_paths(photo_only:bool=False): 
+def get_my_relative_paths(): 
     """Function used to identify where you've installed the GEOS-Chem Emulator on 
     your computer so we can tell it how to find all the relative inputs it needs!""" 
     
+    # Directory where the GEOS-Chem Emulator is stored: 
     GCEM_path=os.path.dirname(os.path.abspath(__file__))
+        
+    # Where we expect to find Input Files: 
     input_path=os.path.join(GCEM_path, 'Input_Files')
-    
+        
+    # Where the dif photolysis FJX files are located: 
     photolysis_paths=dict({'FJX_Files':                     os.path.join(input_path, 'Photolysis_Files/FJX_Files'),
                            'FJX_input_by_GC-version.xlsx':  os.path.join(input_path, 'Photolysis_Files/FJX_input_by_GC-version.xlsx'),
-                           'FJX_cross_sect_to_jvalues.xlsx':os.path.join(input_path, 'Photolysis_Files/FJX_cross_sect_to_jvalues.xlsx')
+                           'FJX_cross_sect_to_jvalues.xlsx':os.path.join(input_path, 'Photolysis_Files/FJX_cross_sect_to_jvalues.xlsx'),
+                           'jmap_type_help': os.path.join(input_path, 'Photolysis_Files/jmap_type_README.txt')
                            })
-            
-    template_paths=dict({'GEOSChem_K_template.txt':      os.path.join(input_path, 'Template_Files/GEOSChem_K_template.txt'),
-                         'import_GC_rates_template.txt': os.path.join(input_path, 'Template_Files/import_GC_rates_template.txt')
+    
+    # Where the templates for writing the F0AM files are located: 
+    template_paths=dict({'GasRxns':      os.path.join(input_path, 'Template_Files/GEOSChem_GasRxns_template.txt'), 
+                         'HetRxns':      os.path.join(input_path, 'Template_Files/GEOSChem_HetRxns_template.txt'), 
+                         'K':      os.path.join(input_path, 'Template_Files/GEOSChem_K_template.txt'), 
+                         'J':      os.path.join(input_path, 'Template_Files/GEOSChem_J_template.txt'), 
+                         'import_GC_rates': os.path.join(input_path, 'Template_Files/import_GC_rates_template.txt')
                          }) 
-    jmap_type_help= os.path.join(input_path, 'Photolysis_Files/jmap_type_README.txt')
-
-    if photo_only is False: 
-        return GCEM_path, input_path, template_paths, photolysis_paths,jmap_type_help
-    else: 
-        return photolysis_paths
-
-
-def jmap_type_help(): 
-    """Function to return info about options for input 'jmap_type' 
-    
-    AUTHOR: 
-    -------
-        Prof. Jessica D. Haskins (jessica.haskins@utah.edu) GitHub: @jhaskinsPhD
-         
-    CHANGE LOG: 
-    ----------
-        10/31/2023 JDH Created
-    """
-    # Get the paths to the photolysis files on your computer. 
-    GCEM_path, input_path, template_paths, photolysis_paths,jmap_type_help = get_my_relative_paths()
-    
-    #Open the help/readme document & print each line to the screen. 
-    file = open(jmap_type_help, 'r')
-    lines = file.readlines()
-    for line in lines:
-        print(line)
+            
+    # Dump into ouput dictionary for all: 
+    my_paths= dict({'Photolysis_Files': photolysis_paths,
+                    'Template_Files': template_paths}) 
         
-    file.close()
-    return 
+    return my_paths
+
+
+
+
+
+                    
+
+
     
 
 
