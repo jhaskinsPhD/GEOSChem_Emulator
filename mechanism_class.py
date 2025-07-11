@@ -9,8 +9,8 @@ import sys
 import re 
 import numpy as np 
 
-sys.path.append('/uufs/chpc.utah.edu/common/home/u6044586/python_scripts/modules/GEOSChem_Emulator/')
-import utils
+sys.path.append('/uufs/chpc.utah.edu/common/home/u6044586/python_scripts/modules/GEOSChem_Emulator_CLASS/')
+import utils_class as utils 
 
 ###############################################################################
 #                  Functions for comparing reactions/ mechanisms: 

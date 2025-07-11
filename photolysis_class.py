@@ -11,7 +11,7 @@ import sys
 import numpy as np
 import pandas as pd 
 
-import utils
+import utils_class as utils
 
 
 def jmap_type_help(): 

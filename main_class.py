@@ -1,7 +1,7 @@
 import os 
 import sys  
 
-sys.path.append('/uufs/chpc.utah.edu/common/home/u6044586/python_scripts/modules/GEOSChem_Emulator')
+sys.path.append('/uufs/chpc.utah.edu/common/home/u6044586/python_scripts/modules/GEOSChem_Emulator_CLASS')
 import GEOSChem_Emulator_dictv2_class as gcem
 
 def list_directories(path):
@@ -23,7 +23,7 @@ def create_directory(path, directory_name):
 GC_version='14.5.2';
 
 # Define path where GEOS-Chem input KPP files are stored: 
-inpt_pth='/uufs/chpc.utah.edu/common/home/u6044586/python_scripts/modules/GEOSChem_Emulator/Input_Files/GC_Mech_Files'
+inpt_pth='/uufs/chpc.utah.edu/common/home/u6044586/python_scripts/modules/GEOSChem_Emulator_CLASS/Input_Files/GC_Mech_Files'
 
 ###################################################################################
 # DO FULL-CHEM FILES: 

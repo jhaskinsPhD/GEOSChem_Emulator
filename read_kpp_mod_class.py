@@ -12,8 +12,8 @@ import re
 import pandas as pd
 from collections import defaultdict
 
-sys.path.append('/uufs/chpc.utah.edu/common/home/u6044586/python_scripts/modules/GEOSChem_Emulator/')
-import utils
+sys.path.append('/uufs/chpc.utah.edu/common/home/u6044586/python_scripts/modules/GEOSChem_Emulator_CLASS/')
+import utils_class as utils 
 from mechanism_class import *
 #from prep_for_foam_class import *
 import photolysis as hv 

@@ -14,11 +14,11 @@ import numpy as np
 import pandas as pd
 from datetime import date
 
-sys.path.append('/uufs/chpc.utah.edu/common/home/u6044586/python_scripts/modules/GEOSChem_Emulator/')
-from read_kpp_mod import read_kpp 
-from prep_for_foam import prep4f0am 
-import photolysis as hv 
-import utils
+sys.path.append('/uufs/chpc.utah.edu/common/home/u6044586/python_scripts/modules/GEOSChem_Emulator_CLASS/')
+from read_kpp_mod_class import read_kpp 
+from mechanism_class import foam_reaction
+import photolysis_class as hv 
+import utils_class as utils
 
 
 # %%###########################################################################
@@ -1096,9 +1096,46 @@ def edit_GCRxns_template(user_inp:dict, foam_dict:dict,  template_file:str,
         Prof. Jessica D. Haskins (jessica.haskins@utah.edu) GitHub: @jhaskinsPhD
     """
     # Unpack vars from user_inp dict referenced herein: 
-    kppfile= user_inp['kppfile'] 
-    GC_version= user_inp['GC_version'] 
+    GC_version= user_inp['GC_version'] # Just the number ('14.5.2')
     jmap_type= user_inp['jmap_type'] 
+    
+    # To write F0AM output mechanism files we open a template file for each 
+    # part of the mechanism and replace a series of wildcards with info specific to
+    # our mechanism. Here we populate rep_dict, a diction where the keys are 
+    # the wildcards referened in the templates and their values are what to 
+    # replace  that key with.  
+    replacment_dict={}
+    
+    ###########################################################################
+    # ------------ Wildcard ------  =  ------ Expected Value --------------
+    ###########################################################################
+    # **GC_VERSION**                = vXX.X.X
+    # **MECHTYPE**                  = FullChem 
+    # **THE_DATE**                  = 5/10/2021
+    # **FJX_VERSION**               = FJX_j2j_v2024-09.dat
+    # **JMAP_TYPE**                 = CrossSec_Match
+    # **N_SPECIES**                 = 234
+    # **N_RXNS**                    = 12345
+    # **GC_J_FILE**                 = GEOSChem_J_vXXXX   
+    # **REQUIRED_J_NAMES**          = 'jNO3','jO3','jNO2'   
+    # **GC_RATES_FILE**             = import_GC_rates_vXXXX
+    # **RATE_FUNCTS_TO_IMPORT**     = 'GCARR_ac','GCJPLPR_aba','GC_HO2HO2_acac'
+    # **IMPORTED_FUNCTION_HANDLES** = GCARR_ac,  GCJPLPR_aba,  GC_HO2HO2_acac
+    # **SPECIES_LIST**              =  'CLNO2'; 'TOLU'; ...
+    # **INSERT_NHET_RXNS**          = F0AM Reaction Lines
+    # **INSERT_3BODY_RXNS**         = F0AM Reaction Lines
+    # **INSERT_PHOTO_RXNS**         = F0AM Reaction Lines
+    
+    # Only relevant if user has set include_het_rxns to FALSE: 
+    #   **HET_SPECIES_LIST**              = 'AERI';'AONITA'; 
+    #   **INSERT_HET_RXNS**               =   F0AM Reaction Lines
+    
+    #--------------------------------------------------------------------------
+    # **GC_VERSION** ='vXX.X.X'    (Used in header of all files) 
+    #--------------------------------------------------------------------------
+    replacment_dict['**GC_VERSION**' ]=v[
+    
+
      
     # Create a formatted list of all the required rate functions (K's) that must 
     # be imported & named J's. This info goes IN THE HEADER (commented out). Format 
@@ -1353,91 +1390,57 @@ def make_GEOSChem_Rxns_file(user_inp:dict, foam_dict:dict, output_dir: str = '',
 # ----------------- Top level functs referenced in make_GC_mchanism()----------
 ############################################################################### 
 # Function used in make_GC_mechanism() to remove het only rxns in non-het mech: 
-def eliminate_dead_ends(kpp_dict:dict, verbose:bool=True):
+def eliminate_dead_ends(kpp_mech0, verbose:bool=False): 
     """ID Reactions from stuff that's ONLY formed via a Heterogenous reaction
        Basically cut dead end reactions that we don't need...
-
-       Custom Functions: 
-           flatten_nested_list  --> in pyMCM/F0AM_Tools/utils.py
-           enforce_list_inds    --> in pyMCM/F0AM_Tools/utils.py
-           find_in_list         --> in pyMCM/F0AM_Tools/utils.py
-           drop_dupes           --> in pyMCM/F0AM_Tools/utils.py
-           """
-    # Make a dict with info only on het/not-het rxns: 
-    het_info={k:v for k,v in kpp_dict.items() if v['is_het']==True}
-    nhet_info={k:v for k,v in kpp_dict.items() if v['is_het']==False}
-    
-    # Extract (nested) lists of all reactants/products in from any non-het rxns ...
-    nhet_inds=[rx_ind for rx_ind,rx_dict in nhet_info.items()] 
-    nhet_rxns=[rx_dict['reaction'] for rx_ind,rx_dict in nhet_info.items()] 
-    nhet_rct_cmpds=[rx_dict['rct_cmpds'] for rx_ind,rx_dict in nhet_info.items()] 
-    nhet_prd_cmpds=[rx_dict['prd_cmpds'] for rx_ind,rx_dict in nhet_info.items()] 
-
-    # Extract a (nested) list of all reactants/products in from any het rxns ...
-    het_prd_cmpds=[rx_dict['prd_cmpds'] for rx_ind,rx_dict in het_info.items()] 
-
-    # Start with a a list of all UNIQUE products formed in any het rxns 
-    het_prds = utils.flatten_nested_list(het_prd_cmpds, drop_dupes=True) 
-    
-    #Iinitialize vars controlling the while loop: 
-    growing = True
-    start = True
-    while growing:
-        # Initialize everything on first pass through to nested lists of rcts/prds 
-        # in the nhet mech & empty lists of stuff to hold what we'll drop on exit. 
-        if start == True:  
-            rct_a = nhet_rct_cmpds
-            prd_a = nhet_prd_cmpds
-            inds2drop = []
-            sp2drop = []
-            start = False
-        else:
-            # Pretend you dropped all the dead-end reactions you found on last interation 
-            # Now, what cmpds are ONLY formed in het rxns are reactants in nhet rxns? 
-            # ((Since we dropped some prds from nhet mech, there may be new species 
-            # that are now ONLY formed in the het rxns / why we're in a while loop.))
-            inds2keep = [indx for indx in range(0, len(nhet_rxns)) if indx not in inds2drop]
-            [rct_a, prd_a] = utils.enforce_list_inds(inds2keep, [nhet_rct_cmpds, nhet_prd_cmpds])
-
-        # Get a unique list of products that are still being formed  in the non-het rxns.
-        prds = utils.flatten_nested_list(prd_a, drop_dupes=True)
-
-        # Get current size of list of rxn inds2drop before we drop any more on this iteration 
-        sz0 = len(inds2drop)  
-
+       """ 
+    ct=0; rxns2drop=[]; kpp_mech=kpp_mech0.copy()
+    while True: 
+        
+        if ct==0: 
+            nhet_mech=kpp_mech.select_nhet_rxns()
+            het_mech= kpp_mech.select_het_rxns()
+        
+        # Keep oldsize of list of rxns to drop so can see if list is growing: 
+        oldsize=len(rxns2drop)
+        
+        # Start with a a list of all UNIQUE products formed in any het/nhhhet rxns 
+        het_prds= het_mech.get_unq_prds() 
+        nhet_prds= nhet_mech.get_unq_prds() 
+        
         # Find all species formed in het rxns that are NOT formed from any non-het rxns
-        dead=[]
-        [dead.append(sp) for sp in het_prds if (sp not in prds) and (sp not in dead)]
-
-        # Loop over all species ID'd as only forming through a HET rxn.
-        for cmpd in dead:
-            
-            # Find all reactions in the non-het rxns that this species is a REACTANT in.
-            inds, args = utils.find_in_list(cmpd, nhet_rct_cmpds, match_if_contains=True)
-
-            # Add the index of this rxn (in non-het mech) to list we'll drop.
-            [inds2drop.append(i) for i in inds if i not in inds2drop]
-
-            # Add the species to the list of compounds you know you need to drop.
-            if cmpd not in sp2drop:
-                sp2drop.append(cmpd)
-
-        sz1 = len(inds2drop) # Now take size of list of rxn inds to drop ... 
-        if sz0 == sz1: break  # if list stopped growing, stop while loop!
-
-    # Get a list of the top level key in the kpp_dict for the rxns we will DROP 
-    # from the entire mechuanism (those in the nhet mech that depend on het stuff) : 
-    KPP_inds2drop = [nhet_inds[indx] for indx in inds2drop]
-    rxns2drop=[v['reaction'] for k,v in kpp_dict.items() if k in KPP_inds2drop]
-    
+        exclusively_het=[sp for sp in het_prds if sp not in nhet_prds] 
+        #print(ct, exclusively_het) 
+        
+        # Find all reactions in the non-het metch that these exclusively het species are a REACTANT in.
+        nhet_2drop=nhet_mech.select_by_rcts(rct_list=exclusively_het)
+        #print(ct, nhet_2drop.disp_rxn_list())
+        
+        # Pretend all the reactions that are "dead ends" (reacting away species that would never form) 
+        # are now "heterogeneous" reactions, & not in the nhet mech. 
+        # Now, what cmpds are ONLY formed in het rxns are reactants in nhet rxns? 
+        for rxn_i in nhet_2drop.rxn_list: 
+            nhet_mech.remove_rxn(rxn_i)
+            het_mech.add_rxn(rxn_i) 
+            rxns2drop.append(rxn_i) 
+        
+        # If list is no longer growing, break out of the while loop; 
+        if oldsize==len(rxns2drop): 
+            break
+        
+        # Go on to another iteration... 
+        ct=ct+1 
+        
     # Print out info on what rxns are being commented out if verbose is True: 
     if verbose is True and len(rxns2drop) > 0:
-        print('Commenting out these gas/ photolysis rxns from mech because they ' +
+        print('Commenting out these gas/photolysis rxns from mech because they ' +
               'involve species only formed in het reactions, which are not included:\n')
-        [print('    '+r) for r in rxns2drop]
+        [print('    '+r.reaction) for r in rxns2drop]
         print('\n')
+
     
-    return  KPP_inds2drop
+    return rxns2drop 
+
 
 # Function used in make_GC_mechanism() to check user inputs to make_GC_mechanism()
 def check_user_inputs(kppfile:str, rate_files, GC_version: str, jmap_type: str, 
@@ -1483,7 +1486,7 @@ def check_user_inputs(kppfile:str, rate_files, GC_version: str, jmap_type: str,
                 raise FileNotFoundError(f"The path to the {key} {ftype.split('_')[0].lower()}"+
                                         "file was not found where expected at: \n" +
                                         f"\t'{these_paths[key]}'\n" +
-                                        f"It should be located at: '.../GEOSChem_Emulator/Input_Files/{ftype}/{key}'" 
+                                        f"It should be located at: '.../GEOSChem_Emulator_CLASS/Input_Files/{ftype}/{key}'" 
                                         ).with_traceback(sys.exc_info()[2])
 
     # Check that the user input for "jmap_type" is allowed/ recognized: :
@@ -1546,28 +1549,38 @@ def make_GC_mechanism(kppfile, rate_files, GC_version: str, jmap_type: str, incl
                                  verbose=verbose)
     
 
-    # Parse the KPP file. Get list of rxns and rates we need to write a F0AM file.
+    # Parse the KPP file. Get "mechanism object" with rxns and rates we need to write a F0AM file.
     print('Parsing KPP file...') 
-    tracer_info, fixed_vars, kpp_dict = read_kpp(kppfile, output_dir=output_dir)
+    tracer_info, fixed_vars, kpp_mech = read_kpp(kppfile, output_dir=output_dir)
 
     
     # Read in the right FJX file for this GC-Version and build the j-mapping
     # dictionary & FJX dataframes to use in mapping KPP J's to F0AM J's.
     jmap_dict, fjx_df, user_inp = hv.create_jmap_dict(user_inp, tracer_info)
     
-    
+
     # If NOT including heterogeneous reactions in output mech, we should be able to 
     # eliminate some reactions from the mechanism (commenting them out). (e.g. Why
     # photolyze ClNO2 if there is none ever made b/c formation is het only?).
-    inds2drop=[] # Inialize list of inds to drop from kpp_dict... 
+    rxns2drop=[] # Inialize list of inds to drop from kpp_dict... 
     if include_het_rxns is False:
-        inds2drop=eliminate_dead_ends(kpp_dict, verbose=user_inp['verbose'])
+        rxns2drop=eliminate_dead_ends(kpp_mech, verbose=user_inp['verbose'])
+        
+        # Pull out the non-het only mechanism & then 
+        nhet_mech=kpp_mech.select_nhet_rxns()
+
+        # Comment out all rxns in rxns2drop from the non-het mechanism: 
+        for rxn_i in rxns2drop: nhet_mech.comment_rxn(rxn_i) 
+
+        # Save a copy of the nhet rxns (only) w these commented out rxns to use 
+        my_mech=nhet_mech.copy() 
+    else: 
+        # If using all the rxns the just make a copy named same thing. as above 
+        my_mech=kpp_mech.copy() 
+        
+    # For each reaction in our mechanism, convert it into a foam-style reaction object 
+    foam_mech=[foam_reaction(rxn_i, jmap_dict=jmap_dict) for rxn_i in my_mech.rxn_list]
     
-    # Prep reactions & rates for F0AM (e.g. turn kpp_dict info into format F0AM 
-    # The output "foam dict" has 2 top level keys: 'het' & 'nhet' w/ same info 
-    # about stuff that will go in the het/nonhet mechanism files (if het is requested): 
-    print('Preparing for F0AM...')
-    foam_dict=prep4f0am(kpp_dict, inds2drop, fixed_vars, jmap_dict)
 
     # # Save Tracer info to an outputfile too: 
     # Check that the filename is available & return the full path to write the file: 
