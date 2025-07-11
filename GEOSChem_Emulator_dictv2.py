@@ -1548,7 +1548,7 @@ def make_GC_mechanism(kppfile, rate_files, GC_version: str, jmap_type: str, incl
 
     # Parse the KPP file. Get list of rxns and rates we need to write a F0AM file.
     print('Parsing KPP file...') 
-    tracer_info, fixed_vars, kpp_dict = read_kpp(kppfile, output_dir=output_dir)
+    tracer_info, fixed_vars, kpp_dict = read_kpp(kppfile, output_dir=output_dir, out2yaml=True)
 
     
     # Read in the right FJX file for this GC-Version and build the j-mapping

@@ -1,0 +1,2062 @@
+0:
+  KPP_line: 'Hg0     + Br     = HgBr :     GCARR_ab(1.46d-32, 1.86d0) * NUMDEN;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgBr
+  prd_stoich:
+  - 1.0
+  rate: GCARR_ab(1.46e-32, 1.86) * NUMDEN
+  rate_function:
+  - GCARR_ab
+  rct_cmpds:
+  - Hg0
+  - Br
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: Hg0+Br=HgBr
+1:
+  KPP_line: 'HgBr             = Hg0 :      GCARR_abc(1.6d-9, 1.86d0, -7801.0d0) *
+    NUMDEN;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - Hg0
+  prd_stoich:
+  - 1.0
+  rate: GCARR_abc(1.6e-9, 1.86, -7801.0) * NUMDEN
+  rate_function:
+  - GCARR_abc
+  rct_cmpds:
+  - HgBr
+  rct_stoich:
+  - 1.0
+  reaction: HgBr=Hg0
+2:
+  KPP_line: 'HgBr    + Br     = Hg0 :      3.9d-11;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - Hg0
+  prd_stoich:
+  - 1.0
+  rate: '3.9e-11'
+  rate_function: []
+  rct_cmpds:
+  - HgBr
+  - Br
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgBr+Br=Hg0
+3:
+  KPP_line: 'HgBr    + NO2    = Hg0 :      3.0d-12;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - Hg0
+  prd_stoich:
+  - 1.0
+  rate: '3.0e-12'
+  rate_function: []
+  rct_cmpds:
+  - HgBr
+  - NO2
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgBr+NO2=Hg0
+4:
+  KPP_line: 'HgBr    + NO2    = HgBrNO2 :  GCJPLPR_abab(4.3d-30, 5.9d0, 1.2d-10, 1.90d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgBrNO2
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.3e-30, 5.9, 1.2e-10, 1.90, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgBr
+  - NO2
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgBr+NO2=HgBrNO2
+5:
+  KPP_line: 'HgBr    + HO2    = HgBrHO2 :  GCJPLPR_abab(4.3d-30, 5.9d0, 6.9d-11, 2.40d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgBrHO2
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.3e-30, 5.9, 6.9e-11, 2.40, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgBr
+  - HO2
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgBr+HO2=HgBrHO2
+6:
+  KPP_line: 'HgBr    + ClO    = HgBrClO :  GCJPLPR_abab(4.3d-30, 5.9d0, 6.9d-11, 2.40d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgBrClO
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.3e-30, 5.9, 6.9e-11, 2.40, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgBr
+  - ClO
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgBr+ClO=HgBrClO
+7:
+  KPP_line: 'HgBr    + BrO    = HgBrBrO :  GCJPLPR_abab(4.3d-30, 5.9d0, 6.9d-11, 2.40d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgBrBrO
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.3e-30, 5.9, 6.9e-11, 2.40, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgBr
+  - BrO
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgBr+BrO=HgBrBrO
+8:
+  KPP_line: 'HgBr    + OH     = HgBrOH :   GCJPLPR_abab(4.3d-30, 5.9d0, 6.9d-11, 2.40d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgBrOH
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.3e-30, 5.9, 6.9e-11, 2.40, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgBr
+  - OH
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgBr+OH=HgBrOH
+9:
+  KPP_line: 'HgBr    + Br     = HgBr2 :    3.0d-11;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgBr2
+  prd_stoich:
+  - 1.0
+  rate: '3.0e-11'
+  rate_function: []
+  rct_cmpds:
+  - HgBr
+  - Br
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgBr+Br=HgBr2
+10:
+  KPP_line: 'HgBrO   + CH4    = HgBrOH :   GCARR_ac(4.1d-12, -856.0d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgBrOH
+  prd_stoich:
+  - 1.0
+  rate: GCARR_ac(4.1e-12, -856.0)
+  rate_function:
+  - GCARR_ac
+  rct_cmpds:
+  - HgBrO
+  - CH4
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgBrO+CH4=HgBrOH
+11:
+  KPP_line: 'HgBrO   + CO     = HgBr :     GCARR_ac(6.0d-11, -550.0d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgBr
+  prd_stoich:
+  - 1.0
+  rate: GCARR_ac(6.0e-11, -550.0)
+  rate_function:
+  - GCARR_ac
+  rct_cmpds:
+  - HgBrO
+  - CO
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgBrO+CO=HgBr
+12:
+  KPP_line: 'HgBr    + O3     = HgBrO :    3.0d-11;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgBrO
+  prd_stoich:
+  - 1.0
+  rate: '3.0e-11'
+  rate_function: []
+  rct_cmpds:
+  - HgBr
+  - O3
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgBr+O3=HgBrO
+13:
+  KPP_line: 'Hg0     + Cl     = HgCl :     GCARR_ac(2.25d-33, 680.0d0) * NUMDEN;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgCl
+  prd_stoich:
+  - 1.0
+  rate: GCARR_ac(2.25e-33, 680.0) * NUMDEN
+  rate_function:
+  - GCARR_ac
+  rct_cmpds:
+  - Hg0
+  - Cl
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: Hg0+Cl=HgCl
+14:
+  KPP_line: 'HgCl    + Cl     = Hg0 :      3.9d-11;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - Hg0
+  prd_stoich:
+  - 1.0
+  rate: '3.9e-11'
+  rate_function: []
+  rct_cmpds:
+  - HgCl
+  - Cl
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgCl+Cl=Hg0
+15:
+  KPP_line: 'HgCl    + NO2    = Hg0 :      3.0d-12;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - Hg0
+  prd_stoich:
+  - 1.0
+  rate: '3.0e-12'
+  rate_function: []
+  rct_cmpds:
+  - HgCl
+  - NO2
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgCl+NO2=Hg0
+16:
+  KPP_line: 'HgCl    + NO2    = HgClNO2 :  GCJPLPR_abab(4.3d-30, 5.9d0, 1.2d-10, 1.90d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgClNO2
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.3e-30, 5.9, 1.2e-10, 1.90, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgCl
+  - NO2
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgCl+NO2=HgClNO2
+17:
+  KPP_line: 'HgCl    + HO2    = HgClHO2 :  GCJPLPR_abab(4.3d-30, 5.9d0, 6.9d-11, 2.40d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgClHO2
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.3e-30, 5.9, 6.9e-11, 2.40, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgCl
+  - HO2
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgCl+HO2=HgClHO2
+18:
+  KPP_line: 'HgCl    + ClO    = HgClClO :  GCJPLPR_abab(4.3d-30, 5.9d0, 6.9d-11, 2.40d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgClClO
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.3e-30, 5.9, 6.9e-11, 2.40, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgCl
+  - ClO
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgCl+ClO=HgClClO
+19:
+  KPP_line: 'HgCl    + BrO    = HgClBrO :  GCJPLPR_abab(4.3d-30, 5.9d0, 6.9d-11, 2.40d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgClBrO
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.3e-30, 5.9, 6.9e-11, 2.40, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgCl
+  - BrO
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgCl+BrO=HgClBrO
+20:
+  KPP_line: 'HgCl    + Br     = HgClBr :   3.0d-11;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgClBr
+  prd_stoich:
+  - 1.0
+  rate: '3.0e-11'
+  rate_function: []
+  rct_cmpds:
+  - HgCl
+  - Br
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgCl+Br=HgClBr
+21:
+  KPP_line: 'HgCl    + OH     = HgClOH :   3.0d-11;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgClOH
+  prd_stoich:
+  - 1.0
+  rate: '3.0e-11'
+  rate_function: []
+  rct_cmpds:
+  - HgCl
+  - OH
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgCl+OH=HgClOH
+22:
+  KPP_line: 'HgCl    + O3     = HgClO  :   3.0d-11;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgClO
+  prd_stoich:
+  - 1.0
+  rate: '3.0e-11'
+  rate_function: []
+  rct_cmpds:
+  - HgCl
+  - O3
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgCl+O3=HgClO
+23:
+  KPP_line: 'HgClO   + CH4    = HgClOH :   GCARR_ac(4.1d-12, -856.0d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgClOH
+  prd_stoich:
+  - 1.0
+  rate: GCARR_ac(4.1e-12, -856.0)
+  rate_function:
+  - GCARR_ac
+  rct_cmpds:
+  - HgClO
+  - CH4
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgClO+CH4=HgClOH
+24:
+  KPP_line: 'HgClO   + CO     = HgCl :     GCARR_ac(6.0d-11, -550.0d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgCl
+  prd_stoich:
+  - 1.0
+  rate: GCARR_ac(6.0e-11, -550.0)
+  rate_function:
+  - GCARR_ac
+  rct_cmpds:
+  - HgClO
+  - CO
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgClO+CO=HgCl
+25:
+  KPP_line: 'Hg0     + OH     = HgOH :     GCARR_ac(3.34d-33, 43.0d0) * NUMDEN;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgOH
+  prd_stoich:
+  - 1.0
+  rate: GCARR_ac(3.34e-33, 43.0) * NUMDEN
+  rate_function:
+  - GCARR_ac
+  rct_cmpds:
+  - Hg0
+  - OH
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: Hg0+OH=HgOH
+26:
+  KPP_line: 'HgOH             = Hg0 :      GCARR_ac(1.22d-9, -5720.0d0) * NUMDEN;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - Hg0
+  prd_stoich:
+  - 1.0
+  rate: GCARR_ac(1.22e-9, -5720.0) * NUMDEN
+  rate_function:
+  - GCARR_ac
+  rct_cmpds:
+  - HgOH
+  rct_stoich:
+  - 1.0
+  reaction: HgOH=Hg0
+27:
+  KPP_line: 'HgOH    + NO2    = HgOHNO2 :  GCJPLPR_abab(4.1d-30, 5.9d0, 1.2E-10, 1.90d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgOHNO2
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.1e-30, 5.9, 1.2e-10, 1.90, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgOH
+  - NO2
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgOH+NO2=HgOHNO2
+28:
+  KPP_line: 'HgOH    + HO2    = HgOHHO2 :  GCJPLPR_abab(4.1d-30, 5.9d0, 6.9d-11, 2.40d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgOHHO2
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.1e-30, 5.9, 6.9e-11, 2.40, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgOH
+  - HO2
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgOH+HO2=HgOHHO2
+29:
+  KPP_line: 'HgOH    + ClO    = HgOHClO :  GCJPLPR_abab(4.1d-30, 5.9d0, 6.9d-11, 2.40d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgOHClO
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.1e-30, 5.9, 6.9e-11, 2.40, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgOH
+  - ClO
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgOH+ClO=HgOHClO
+30:
+  KPP_line: 'HgOH    + BrO    = HgOHBrO :  GCJPLPR_abab(4.1d-30, 5.9d0, 6.9d-11, 2.40d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgOHBrO
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.1e-30, 5.9, 6.9e-11, 2.40, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgOH
+  - BrO
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgOH+BrO=HgOHBrO
+31:
+  KPP_line: 'HgOH    + Br     = HgBrOH :   GCJPLPR_abab(4.1d-30, 5.9d0, 6.9d-11, 2.40d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgBrOH
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.1e-30, 5.9, 6.9e-11, 2.40, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgOH
+  - Br
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgOH+Br=HgBrOH
+32:
+  KPP_line: 'HgOH    + OH     = HgOHOH :   GCJPLPR_abab(4.1d-30, 5.9d0, 6.9d-11, 2.40d0,
+    0.6d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgOHOH
+  prd_stoich:
+  - 1.0
+  rate: GCJPLPR_abab(4.1e-30, 5.9, 6.9e-11, 2.40, 0.6)
+  rate_function:
+  - GCJPLPR_abab
+  rct_cmpds:
+  - HgOH
+  - OH
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgOH+OH=HgOHOH
+33:
+  KPP_line: 'HgOH    + O3     = HgOHO :    3.0d-11;'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgOHO
+  prd_stoich:
+  - 1.0
+  rate: '3.0e-11'
+  rate_function: []
+  rct_cmpds:
+  - HgOH
+  - O3
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgOH+O3=HgOHO
+34:
+  KPP_line: 'HgOHO   + CH4    = HgOHOH :   GCARR_ac(4.1d-12, -856.0d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgOHOH
+  prd_stoich:
+  - 1.0
+  rate: GCARR_ac(4.1e-12, -856.0)
+  rate_function:
+  - GCARR_ac
+  rct_cmpds:
+  - HgOHO
+  - CH4
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgOHO+CH4=HgOHOH
+35:
+  KPP_line: 'HgOHO   + CO     = HgOH :     GCARR_ac(6.0d-11, -550.0d0);'
+  comments: ''
+  is_3body: false
+  is_gas: true
+  is_het: false
+  is_photo: false
+  prd_cmpds:
+  - HgOH
+  prd_stoich:
+  - 1.0
+  rate: GCARR_ac(6.0e-11, -550.0)
+  rate_function:
+  - GCARR_ac
+  rct_cmpds:
+  - HgOHO
+  - CO
+  rct_stoich:
+  - 1.0
+  - 1.0
+  reaction: HgOHO+CO=HgOH
+36:
+  KPP_line: 'HgBrNO2 = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgBrNO2)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgBrNO2) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgBrNO2
+  rct_stoich:
+  - 1.0
+  reaction: HgBrNO2=Hg2ORGP
+37:
+  KPP_line: 'HgBrHO2 = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgBrHO2)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgBrHO2) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgBrHO2
+  rct_stoich:
+  - 1.0
+  reaction: HgBrHO2=Hg2ORGP
+38:
+  KPP_line: 'HgBrOH  = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgBrOH
+    ) );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgBrOH ) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgBrOH
+  rct_stoich:
+  - 1.0
+  reaction: HgBrOH=Hg2ORGP
+39:
+  KPP_line: 'HgBrBrO = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgBrBrO)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgBrBrO) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgBrBrO
+  rct_stoich:
+  - 1.0
+  reaction: HgBrBrO=Hg2ORGP
+40:
+  KPP_line: 'HgBrClO = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgBrClO)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgBrClO) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgBrClO
+  rct_stoich:
+  - 1.0
+  reaction: HgBrClO=Hg2ORGP
+41:
+  KPP_line: 'HgBr2   = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgBr2  )
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgBr2  ) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgBr2
+  rct_stoich:
+  - 1.0
+  reaction: HgBr2=Hg2ORGP
+42:
+  KPP_line: 'HgClNO2 = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgClNO2)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgClNO2) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgClNO2
+  rct_stoich:
+  - 1.0
+  reaction: HgClNO2=Hg2ORGP
+43:
+  KPP_line: 'HgClHO2 = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgClHO2)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgClHO2) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgClHO2
+  rct_stoich:
+  - 1.0
+  reaction: HgClHO2=Hg2ORGP
+44:
+  KPP_line: 'HgClOH  = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgClOH
+    ) );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgClOH ) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgClOH
+  rct_stoich:
+  - 1.0
+  reaction: HgClOH=Hg2ORGP
+45:
+  KPP_line: 'HgClBrO = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgClBrO)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgClBrO) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgClBrO
+  rct_stoich:
+  - 1.0
+  reaction: HgClBrO=Hg2ORGP
+46:
+  KPP_line: 'HgClClO = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgClClO)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgClClO) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgClClO
+  rct_stoich:
+  - 1.0
+  reaction: HgClClO=Hg2ORGP
+47:
+  KPP_line: 'HgClBr  = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgClBr
+    ) );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgClBr ) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgClBr
+  rct_stoich:
+  - 1.0
+  reaction: HgClBr=Hg2ORGP
+48:
+  KPP_line: 'HgCl2   = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgCl2  )
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgCl2  ) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgCl2
+  rct_stoich:
+  - 1.0
+  reaction: HgCl2=Hg2ORGP
+49:
+  KPP_line: 'HgOHNO2 = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgOHNO2)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgOHNO2) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgOHNO2
+  rct_stoich:
+  - 1.0
+  reaction: HgOHNO2=Hg2ORGP
+50:
+  KPP_line: 'HgOHHO2 = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgOHHO2)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgOHHO2) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgOHHO2
+  rct_stoich:
+  - 1.0
+  reaction: HgOHHO2=Hg2ORGP
+51:
+  KPP_line: 'HgOHOH  = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgOHOH
+    ) );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgOHOH ) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgOHOH
+  rct_stoich:
+  - 1.0
+  reaction: HgOHOH=Hg2ORGP
+52:
+  KPP_line: 'HgOHBrO = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgOHBrO)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgOHBrO) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgOHBrO
+  rct_stoich:
+  - 1.0
+  reaction: HgOHBrO=Hg2ORGP
+53:
+  KPP_line: 'HgOHClO = Hg2ORGP :  Het_HgIIP_Org( State_Het, 0.1d0, SR_MW(ind_HgOHClO)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ORGP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Org( State_Het, 0.1, SR_MW(ind_HgOHClO) )
+  rate_function:
+  - Het_HgIIP_Org
+  - SR_MW
+  rct_cmpds:
+  - HgOHClO
+  rct_stoich:
+  - 1.0
+  reaction: HgOHClO=Hg2ORGP
+54:
+  KPP_line: 'HgBrNO2 = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgBrNO2)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgBrNO2) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgBrNO2
+  rct_stoich:
+  - 1.0
+  reaction: HgBrNO2=Hg2ClP
+55:
+  KPP_line: 'HgBrHO2 = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgBrHO2)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgBrHO2) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgBrHO2
+  rct_stoich:
+  - 1.0
+  reaction: HgBrHO2=Hg2ClP
+56:
+  KPP_line: 'HgBrOH  = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgBrOH
+    ) );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgBrOH ) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgBrOH
+  rct_stoich:
+  - 1.0
+  reaction: HgBrOH=Hg2ClP
+57:
+  KPP_line: 'HgBrBrO = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgBrBrO)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgBrBrO) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgBrBrO
+  rct_stoich:
+  - 1.0
+  reaction: HgBrBrO=Hg2ClP
+58:
+  KPP_line: 'HgBrClO = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgBrClO)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgBrClO) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgBrClO
+  rct_stoich:
+  - 1.0
+  reaction: HgBrClO=Hg2ClP
+59:
+  KPP_line: 'HgBr2   = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgBr2  )
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgBr2  ) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgBr2
+  rct_stoich:
+  - 1.0
+  reaction: HgBr2=Hg2ClP
+60:
+  KPP_line: 'HgClNO2 = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgClNO2)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgClNO2) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgClNO2
+  rct_stoich:
+  - 1.0
+  reaction: HgClNO2=Hg2ClP
+61:
+  KPP_line: 'HgClHO2 = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgClHO2)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgClHO2) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgClHO2
+  rct_stoich:
+  - 1.0
+  reaction: HgClHO2=Hg2ClP
+62:
+  KPP_line: 'HgClOH  = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgClOH
+    ) );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgClOH ) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgClOH
+  rct_stoich:
+  - 1.0
+  reaction: HgClOH=Hg2ClP
+63:
+  KPP_line: 'HgClBrO = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgClBrO)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgClBrO) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgClBrO
+  rct_stoich:
+  - 1.0
+  reaction: HgClBrO=Hg2ClP
+64:
+  KPP_line: 'HgClClO = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgClClO)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgClClO) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgClClO
+  rct_stoich:
+  - 1.0
+  reaction: HgClClO=Hg2ClP
+65:
+  KPP_line: 'HgClBr  = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgClBr
+    ) );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgClBr ) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgClBr
+  rct_stoich:
+  - 1.0
+  reaction: HgClBr=Hg2ClP
+66:
+  KPP_line: 'HgOHNO2 = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgOHNO2)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgOHNO2) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgOHNO2
+  rct_stoich:
+  - 1.0
+  reaction: HgOHNO2=Hg2ClP
+67:
+  KPP_line: 'HgOHHO2 = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgOHHO2)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgOHHO2) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgOHHO2
+  rct_stoich:
+  - 1.0
+  reaction: HgOHHO2=Hg2ClP
+68:
+  KPP_line: 'HgOHOH  = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgOHOH
+    ) );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgOHOH ) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgOHOH
+  rct_stoich:
+  - 1.0
+  reaction: HgOHOH=Hg2ClP
+69:
+  KPP_line: 'HgOHBrO = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgOHBrO)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgOHBrO) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgOHBrO
+  rct_stoich:
+  - 1.0
+  reaction: HgOHBrO=Hg2ClP
+70:
+  KPP_line: 'HgOHClO = Hg2ClP  :  Het_HgIIP_Inorg( State_Het, 0.1d0, SR_MW(ind_HgOHClO)
+    );'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: true
+  is_photo: false
+  prd_cmpds:
+  - Hg2ClP
+  prd_stoich:
+  - 1.0
+  rate: Het_HgIIP_Inorg( State_Het, 0.1, SR_MW(ind_HgOHClO) )
+  rate_function:
+  - Het_HgIIP_Inorg
+  - SR_MW
+  rct_cmpds:
+  - HgOHClO
+  rct_stoich:
+  - 1.0
+  reaction: HgOHClO=Hg2ClP
+71:
+  KPP_line: 'NO2     + hv = NO + O3 :                 PHOTOL(25);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - 'NO'
+  - O3
+  prd_stoich:
+  - 1.0
+  - 1.0
+  rate: PHOTOL(25)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - NO2
+  rct_stoich:
+  - 1.0
+  reaction: NO2+hv=NO+O3
+72:
+  KPP_line: 'BrO     + hv = Br + O3 :                 PHOTOL(26);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - Br
+  - O3
+  prd_stoich:
+  - 1.0
+  - 1.0
+  rate: PHOTOL(26)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - BrO
+  rct_stoich:
+  - 1.0
+  reaction: BrO+hv=Br+O3
+73:
+  KPP_line: 'ClO     + hv = Cl + O3 :                 PHOTOL(27);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - Cl
+  - O3
+  prd_stoich:
+  - 1.0
+  - 1.0
+  rate: PHOTOL(27)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - ClO
+  rct_stoich:
+  - 1.0
+  reaction: ClO+hv=Cl+O3
+74:
+  KPP_line: 'HgBr    + hv = Hg0 + Br :                PHOTOL(4);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - Hg0
+  - Br
+  prd_stoich:
+  - 1.0
+  - 1.0
+  rate: PHOTOL(4)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgBr
+  rct_stoich:
+  - 1.0
+  reaction: HgBr+hv=Hg0+Br
+75:
+  KPP_line: 'HgBrNO2 + hv = 0.9HgBrO + 0.1HgBr + 0.9NO + 0.1NO2 :                        PHOTOL(7);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - HgBrO
+  - HgBr
+  - 'NO'
+  - NO2
+  prd_stoich:
+  - 0.9
+  - 0.1
+  - 0.9
+  - 0.1
+  rate: PHOTOL(7)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgBrNO2
+  rct_stoich:
+  - 1.0
+  reaction: HgBrNO2+hv=0.9HgBrO+0.1HgBr+0.9NO+0.1NO2
+76:
+  KPP_line: 'HgBrHO2 + hv = 0.25HgBrO + 0.67Hg0 + 0.07HgBr + 0.01HgBrOH + 0.67Br +0.74HO2
+    + 0.26OH :                     PHOTOL(8);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - HgBrO
+  - Hg0
+  - HgBr
+  - HgBrOH
+  - Br
+  - HO2
+  - OH
+  prd_stoich:
+  - 0.25
+  - 0.67
+  - 0.07
+  - 0.01
+  - 0.67
+  - 0.74
+  - 0.26
+  rate: PHOTOL(8)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgBrHO2
+  rct_stoich:
+  - 1.0
+  reaction: HgBrHO2+hv=0.25HgBrO+0.67Hg0+0.07HgBr+0.01HgBrOH+0.67Br+0.74HO2+0.26OH
+77:
+  KPP_line: 'HgBrOH  + hv = 0.49Hg0 + 0.35HgOH + 0.15HgBr + 0.01HgBrOH + 0.85Br +0.65OH
+    :                               PHOTOL(9);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - Hg0
+  - HgOH
+  - HgBr
+  - HgBrOH
+  - Br
+  - OH
+  prd_stoich:
+  - 0.49
+  - 0.35
+  - 0.15
+  - 0.01
+  - 0.85
+  - 0.65
+  rate: PHOTOL(9)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgBrOH
+  rct_stoich:
+  - 1.0
+  reaction: HgBrOH+hv=0.49Hg0+0.35HgOH+0.15HgBr+0.01HgBrOH+0.85Br+0.65OH
+78:
+  KPP_line: 'HgBr2   + hv = 0.4Hg0 + 0.6HgBr + 1.4Br :                                 PHOTOL(10);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - Hg0
+  - HgBr
+  - Br
+  prd_stoich:
+  - 0.4
+  - 0.6
+  - 1.4
+  rate: PHOTOL(10)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgBr2
+  rct_stoich:
+  - 1.0
+  reaction: HgBr2+hv=0.4Hg0+0.6HgBr+1.4Br
+79:
+  KPP_line: 'HgBrBrO + hv = Hg0 + BrO :               PHOTOL(11);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - Hg0
+  - BrO
+  prd_stoich:
+  - 1.0
+  - 1.0
+  rate: PHOTOL(11)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgBrBrO
+  rct_stoich:
+  - 1.0
+  reaction: HgBrBrO+hv=Hg0+BrO
+80:
+  KPP_line: 'HgBrClO + hv = Hg0 + Cl + Br :           PHOTOL(12);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - Hg0
+  - Cl
+  - Br
+  prd_stoich:
+  - 1.0
+  - 1.0
+  - 1.0
+  rate: PHOTOL(12)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgBrClO
+  rct_stoich:
+  - 1.0
+  reaction: HgBrClO+hv=Hg0+Cl+Br
+81:
+  KPP_line: '{HgCl2   + hv = Hg0 + 2Cl :               PHOTOL(5);}'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - Hg0
+  - Cl
+  prd_stoich:
+  - 1.0
+  - 2.0
+  rate: PHOTOL(5)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgCl2
+  rct_stoich:
+  - 1.0
+  reaction: HgCl2+hv=Hg0+2Cl
+82:
+  KPP_line: 'HgClNO2 + hv = 0.9HgClO + 0.1HgCl + 0.9NO + 0.1NO2 :                        PHOTOL(14);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - HgClO
+  - HgCl
+  - 'NO'
+  - NO2
+  prd_stoich:
+  - 0.9
+  - 0.1
+  - 0.9
+  - 0.1
+  rate: PHOTOL(14)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgClNO2
+  rct_stoich:
+  - 1.0
+  reaction: HgClNO2+hv=0.9HgClO+0.1HgCl+0.9NO+0.1NO2
+83:
+  KPP_line: 'HgClHO2 + hv = 0.25HgClO + 0.67Hg0 + 0.07HgCl + 0.01HgClOH + 0.67Cl +0.74HO2
+    + 0.26OH :                     PHOTOL(15);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - HgClO
+  - Hg0
+  - HgCl
+  - HgClOH
+  - Cl
+  - HO2
+  - OH
+  prd_stoich:
+  - 0.25
+  - 0.67
+  - 0.07
+  - 0.01
+  - 0.67
+  - 0.74
+  - 0.26
+  rate: PHOTOL(15)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgClHO2
+  rct_stoich:
+  - 1.0
+  reaction: HgClHO2+hv=0.25HgClO+0.67Hg0+0.07HgCl+0.01HgClOH+0.67Cl+0.74HO2+0.26OH
+84:
+  KPP_line: 'HgClOH  + hv = 0.49Hg0 + 0.35HgOH + 0.15HgCl + 0.01HgClOH + 0.85Cl +0.65OH
+    :                               PHOTOL(16);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - Hg0
+  - HgOH
+  - HgCl
+  - HgClOH
+  - Cl
+  - OH
+  prd_stoich:
+  - 0.49
+  - 0.35
+  - 0.15
+  - 0.01
+  - 0.85
+  - 0.65
+  rate: PHOTOL(16)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgClOH
+  rct_stoich:
+  - 1.0
+  reaction: HgClOH+hv=0.49Hg0+0.35HgOH+0.15HgCl+0.01HgClOH+0.85Cl+0.65OH
+85:
+  KPP_line: 'HgClBr  + hv = HgCl + Br :               PHOTOL(17);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - HgCl
+  - Br
+  prd_stoich:
+  - 1.0
+  - 1.0
+  rate: PHOTOL(17)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgClBr
+  rct_stoich:
+  - 1.0
+  reaction: HgClBr+hv=HgCl+Br
+86:
+  KPP_line: 'HgClBrO + hv = HgCl + BrO :              PHOTOL(18);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - HgCl
+  - BrO
+  prd_stoich:
+  - 1.0
+  - 1.0
+  rate: PHOTOL(18)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgClBrO
+  rct_stoich:
+  - 1.0
+  reaction: HgClBrO+hv=HgCl+BrO
+87:
+  KPP_line: 'HgClClO + hv = HgCl + ClO :              PHOTOL(19);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - HgCl
+  - ClO
+  prd_stoich:
+  - 1.0
+  - 1.0
+  rate: PHOTOL(19)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgClClO
+  rct_stoich:
+  - 1.0
+  reaction: HgClClO+hv=HgCl+ClO
+88:
+  KPP_line: 'HgOH    + hv = Hg0 + OH :                PHOTOL(6);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - Hg0
+  - OH
+  prd_stoich:
+  - 1.0
+  - 1.0
+  rate: PHOTOL(6)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgOH
+  rct_stoich:
+  - 1.0
+  reaction: HgOH+hv=Hg0+OH
+89:
+  KPP_line: 'HgOHNO2 + hv = 0.9HgOHO + 0.1HgOH + 0.9NO + 0.1NO2 :                        PHOTOL(20);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - HgOHO
+  - HgOH
+  - 'NO'
+  - NO2
+  prd_stoich:
+  - 0.9
+  - 0.1
+  - 0.9
+  - 0.1
+  rate: PHOTOL(20)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgOHNO2
+  rct_stoich:
+  - 1.0
+  reaction: HgOHNO2+hv=0.9HgOHO+0.1HgOH+0.9NO+0.1NO2
+90:
+  KPP_line: 'HgOHHO2 + hv = 0.25HgOHO + 0.67Hg0 + 0.07HgOH + 0.01HgOHOH + 0.67Cl +0.74HO2
+    + 0.26OH :                     PHOTOL(21);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - HgOHO
+  - Hg0
+  - HgOH
+  - HgOHOH
+  - Cl
+  - HO2
+  - OH
+  prd_stoich:
+  - 0.25
+  - 0.67
+  - 0.07
+  - 0.01
+  - 0.67
+  - 0.74
+  - 0.26
+  rate: PHOTOL(21)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgOHHO2
+  rct_stoich:
+  - 1.0
+  reaction: HgOHHO2+hv=0.25HgOHO+0.67Hg0+0.07HgOH+0.01HgOHOH+0.67Cl+0.74HO2+0.26OH
+91:
+  KPP_line: 'HgOHOH  + hv = Hg0 + 2OH :               PHOTOL(5);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - Hg0
+  - OH
+  prd_stoich:
+  - 1.0
+  - 2.0
+  rate: PHOTOL(5)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgOHOH
+  rct_stoich:
+  - 1.0
+  reaction: HgOHOH+hv=Hg0+2OH
+92:
+  KPP_line: 'HgOHBrO + hv = HgOH + BrO :              PHOTOL(23);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - HgOH
+  - BrO
+  prd_stoich:
+  - 1.0
+  - 1.0
+  rate: PHOTOL(23)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgOHBrO
+  rct_stoich:
+  - 1.0
+  reaction: HgOHBrO+hv=HgOH+BrO
+93:
+  KPP_line: 'HgOHClO + hv = HgOH + ClO :              PHOTOL(24);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - HgOH
+  - ClO
+  prd_stoich:
+  - 1.0
+  - 1.0
+  rate: PHOTOL(24)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - HgOHClO
+  rct_stoich:
+  - 1.0
+  reaction: HgOHClO+hv=HgOH+ClO
+94:
+  KPP_line: 'Hg2ORGP + hv = Hg0 :                     PHOTOL(13);'
+  comments: ''
+  is_3body: false
+  is_gas: false
+  is_het: false
+  is_photo: true
+  prd_cmpds:
+  - Hg0
+  prd_stoich:
+  - 1.0
+  rate: PHOTOL(13)
+  rate_function:
+  - PHOTOL
+  rct_cmpds:
+  - Hg2ORGP
+  rct_stoich:
+  - 1.0
+  reaction: Hg2ORGP+hv=Hg0

@@ -2,7 +2,7 @@ import os
 import sys  
 
 sys.path.append('/uufs/chpc.utah.edu/common/home/u6044586/python_scripts/modules/GEOSChem_Emulator')
-import GEOSChem_Emulator_dictv2_class as gcem
+import GEOSChem_Emulator_dictv2 as gcem
 
 def list_directories(path):
     ls= [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
@@ -41,11 +41,11 @@ rate_files=[os.path.join(inpt_pth,'v'+GC_version,'gckpp_Rates.F90'),
 jmap_type='CrossSec_Match'
 
 # Decide if you want to include heterogeneous reactions in your mechanism or not: 
-include_het_rxns=False
+include_het_rxns=True
 
 # Set the path where your output files to use in F0AM will be stored: 
 foam_pth='/uufs/chpc.utah.edu/common/home/u6044586/MATLAB/F0AM_v4.4.2/Chem/GEOSChem'
-output_dir= create_directory(foam_pth,'v'+GC_version)
+output_dir= create_directory(foam_pth,'v'+GC_version+'reg')
 
 # Decide whether or not to overwrite files in the output_dir if they exist or to append a version #... 
 overwrite=True
@@ -70,7 +70,7 @@ hg_kppfile=os.path.join(inpt_pth,'v'+hg_GC_version,'Hg.eqn')
 # Define the path to the gckPP Rates file(s) of the version of GEOS-Chem you want to emulate: 
 hg_rate_files=[os.path.join(inpt_pth,'v'+hg_GC_version,'Hg_RateLawFuncs.F90')]
 
-hg_output_dir= create_directory(foam_pth,'v'+hg_GC_version)
+hg_output_dir= create_directory(foam_pth,'v'+hg_GC_version+'-reg')
 hg_foam_dict,hg_kpp_dict,hg_inds2drop,hg_fixed_vars, hg_fjx_df, hg_jmap_dict = gcem.make_GC_mechanism(hg_kppfile, 
                                                                                     hg_rate_files,
                                                                                     hg_GC_version, 
