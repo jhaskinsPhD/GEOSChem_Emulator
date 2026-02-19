@@ -70,6 +70,7 @@ def _convert_fortran_operators(in_string):
     out_string=out_string.replace('.TRUE.', 'true')
         
     return out_string
+ 
         
 def _convert_fortran_numbers(in_string:str ):
     """ Function to take an input string and convert Fortran-style numeric literals 
@@ -181,6 +182,8 @@ def _convert_fortran_numbers(in_string:str ):
  ###############################################################################
  # Functions used to convert from categorical dict to record index dict... 
  ############################################################################### 
+
+
 def _convert_to_index_dict(category_dict):
     """
     Convert categorical dict into a record based index dictionary. 
@@ -228,6 +231,7 @@ def _convert_to_index_dict(category_dict):
     
     return index_dict
 
+
 def _convert_to_category_dict(index_dict):
     """
      Convert a record based index dictionary into a categorical dictionary .
@@ -273,17 +277,16 @@ def _convert_to_category_dict(index_dict):
     return category_dict
 
 
-
 ###############################################################################
 # GENERAL UTILITY FUNCTIONS used in make_GCAllRxns.py & make_import_GC_rates.py
 ###############################################################################
-
-  
+ 
 def _edit_line(line:str, placeholder:str, val2insert:str): 
  
     nline = line.replace(placeholder, val2insert) if placeholder in line.strip() else line 
         
     return nline 
+
 
 def str_multi_replace(string:str, baddies, rep_all:str=''): 
     """ Replace multiple items in a string. 
@@ -885,6 +888,7 @@ def check_filename(filename:str='', default_name:str= '', ext:str='',
     else: # Have to add '/' after opath because pullit it out with os doesn't keep it & 
           # os.path.join() adds it for us when we make fullname...  
         return [opath+'/', just_file]
+
 
 def get_my_relative_paths(): 
     """Function used to identify where you've installed the GEOS-Chem Emulator on 

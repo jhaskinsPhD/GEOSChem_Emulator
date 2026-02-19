@@ -16,7 +16,7 @@ sys.path.append('/uufs/chpc.utah.edu/common/home/u6044586/python_scripts/modules
 import utils_class as utils 
 from mechanism_class import *
 #from prep_for_foam_class import *
-import photolysis as hv 
+import photolysis_class as hv 
 # %%---------------------------------------------------------------------------
 # L2-function used to peice together reactions that may have been split over multiple
 # lines in the KPP file before line is passed to parse_rxns_and_rates() within read_kpp(). 
